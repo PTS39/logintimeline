@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรไฟล์ผู้ใช้</title>
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+    <div class="profile-container">
+        <div class="logo">
+            <img src="image/AdviceL.jpeg" alt="Advice Intelligence Logo">
+        </div>
+        <h2>Advice | แอดไวซ์ อุบลราชธานี ใกล้สี่แยกสามัคคี ร้านขาย-ซ่อมคอมพิวเตอร์ (Apple อุบลราชธานี)</h2>
+        
+        <div id="profile" style="display: none;">
+            <img id="profilePicture" src="" alt="Profile Picture">
+            <h3 id="displayName"></h3>
+            <p id="userId"></p>
+        </div>
+        
+        <div id="loginPrompt" style="display: none;">
+            <p>กรุณาเข้าสู่ระบบเพื่อดูโปรไฟล์ของคุณ</p>
+            <a href="login.html">เข้าสู่ระบบ</a>
+        </div>
+        
+        <button id="lineLogoutButton" style="display: none;">Logout</button>
+
+        <footer>
+            <p>Advice Branch Management</p>
+        </footer>
+    </div>
+
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        async function main() {
+            await liff.init({ liffId: "YOUR_LIFF_ID" });
+
+            if (liff.isLoggedIn()) {
+                const profile = await liff.getProfile();
+                // Here you would check if the user is registered in your system
+                // For example, make an API call to check user registration status
+                const isRegistered = await checkUserRegistration(profile.userId); // Placeholder function
+
+                if (isRegistered) {
+                    document.getElementById('profilePicture').src = profile.pictureUrl;
+                    document.getElementById('displayName').innerText = profile.displayName;
+                    document.getElementById('userId').innerText = `User ID: ${profile.userId}`;
+                    document.getElementById('profile').style.display = 'block';
+                    document.getElementById('lineLogoutButton').style.display = 'block';
+                    document.getElementById('loginPrompt').style.display = 'none';
+                } else {
+                    document.getElementById('profile').style.display = 'none';
+                    document.getElementById('loginPrompt').style.display = 'block';
+                }
+            } else {
+                liff.login();
+            }
+
+            document.getElementById('lineLogoutButton').addEventListener('click', () => {
+                liff.logout();
+                window.location.reload();
+            });
+        }
+
+        async function checkUserRegistration(userId) {
+            // Placeholder function: Replace with your actual API call
+            const response = await fetch(`/api/check-registration?userId=${userId}`);
+            const data = await response.json();
+            return data.isRegistered;
+        }
+
+        main();
+    </script>
+</body>
+</html>
