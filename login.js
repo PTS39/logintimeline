@@ -2,10 +2,10 @@
 document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault();
     
-    var username = document.getElementById('username').value;
+    var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
 
-    firebase.auth().signInWithEmailAndPassword(username, password)
+    firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             // ล็อกอินสำเร็จ
             window.location.href = 'profile.html'; // เปลี่ยนเส้นทางไปยังหน้าที่คุณต้องการ
