@@ -62,14 +62,6 @@
                 window.location.reload();
             });
         }
-
-        async function checkUserRegistration(userId) {
-            // Placeholder function: Replace with your actual API call
-            const response = await fetch(`/api/check-registration?userId=${userId}`);
-            const data = await response.json();
-            return data.isRegistered;
-        }
-
         main();
     </script>
 </body>
