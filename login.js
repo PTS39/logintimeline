@@ -10,7 +10,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         action: 'login'
     };
 
-    fetch('https://script.google.com/macros/s/AKfycbxeyse6V_QRFeC_c_Zg50QlmLjMKeL8HwWkjssqWScEEPXmr4gkitocv9Z7Xr_j-_iFuA/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbzuDLDgqdPEf7Hfu1WZZeiGb52a75R6Y0eDsjtLA1ISJ9tDjMS8PsTAsS521OLP_dpURg/exec', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
