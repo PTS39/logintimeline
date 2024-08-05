@@ -45,6 +45,28 @@
         </footer>
     </div>
 
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        async function main() {
+            await liff.init({ liffId: "2005997140-0qja2Nyx" });
+
+            document.getElementById('lineLoginButton').addEventListener('click', () => {
+                liff.login();
+            });
+
+            if (liff.isLoggedIn()) {
+                const profile = await liff.getProfile();
+                document.getElementById('fullname').value = profile.displayName;
+                document.getElementById('userId').value = profile.userId;
+                document.getElementById('lineProfilePic').value = profile.pictureUrl;
+                document.getElementById('signupForm').style.display = 'block';
+                document.getElementById('lineLoginButton').style.display = 'none';
+            }
+        }
+
+        main();
+    </script>
+
     <script src="register.js"></script>
 </body>
 </html>
