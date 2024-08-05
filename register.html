@@ -16,7 +16,7 @@
         
         <button id="lineLoginButton">Login with LINE</button>
 
-        <form id="signupForm" style="display: none;" method="POST" action="https://script.google.com/macros/s/AKfycbwx8tjRlKf59AbrRtIStAj-wB5sKRot6kJsRAtQShvNYb7i1T0BvGIql2pD3c4LWV5ZVw/exec">
+        <form id="signupForm" style="display: none;" method="POST" action="">
             <div class="input-container">
                 <label for="fullname">Full Name</label>
                 <input type="text" id="fullname" name="fullname" required>
@@ -45,25 +45,6 @@
         </footer>
     </div>
 
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <script>
-        async function main() {
-            await liff.init({ liffId: "2005997140-0qja2Nyx" });
-
-            document.getElementById('lineLoginButton').addEventListener('click', () => {
-                liff.login();
-            });
-
-            if (liff.isLoggedIn()) {
-                const profile = await liff.getProfile();
-                document.getElementById('fullname').value = profile.displayName;
-                document.getElementById('userId').value = profile.userId;
-                document.getElementById('lineProfilePic').value = profile.pictureUrl;
-                document.getElementById('signupForm').style.display = 'block';
-                document.getElementById('lineLoginButton').style.display = 'none';
-            }
-        }
-        main();
-    </script>    
+    <script src="register.js"></script>
 </body>
 </html>
