@@ -5,40 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ลงทะเบียน</title>
     <link rel="stylesheet" href="css/register.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <script>
-        async function main() {
-            await liff.init({ liffId: "2005997140-0qja2Nyx" });
-
-            document.getElementById('lineLoginButton').addEventListener('click', () => {
-                liff.login();
-            });
-
-            if (liff.isLoggedIn()) {
-                const profile = await liff.getProfile();
-                document.getElementById('fullname').value = profile.displayName;
-                document.getElementById('userId').value = profile.userId;
-                document.getElementById('lineProfilePic').value = profile.pictureUrl;
-                document.getElementById('signupForm').style.display = 'block';
-                document.getElementById('lineLoginButton').style.display = 'none';
-            }
-        }
-
-        main();
-    </script>
 </head>
 <body>
     <div class="register-container">
         <div class="logo">
-            <img src="https://www.advice.co.th/branch-u036/themes/layout/assets/img/logo.png" alt="Advice Intelligence Logo">
+            <img src="image/AdviceL.jpeg" alt="Advice Intelligence Logo">
         </div>
         <h2>Advice | แอดไวซ์ อุบลราชธานี ใกล้สี่แยกสามัคคี ร้านขาย-ซ่อมคอมพิวเตอร์ (Apple อุบลราชธานี)</h2>
         <h3>Input Username & Password</h3>
-
+        
         <button id="lineLoginButton">Login with LINE</button>
 
-        <form id="signupForm" style="display:none;" method="POST" action="https://script.google.com/macros/s/AKfycbwEFkuX7WPXskqraAEMawbIlnHkBgFbSMXo1nL8ajpFoXV9dRQsENI7mX7K9OSsBtue7A/exec">
+        <form id="signupForm" style="display: none;" method="POST">
             <div class="input-container">
                 <label for="fullname">Full Name</label>
                 <input type="text" id="fullname" name="fullname" required>
@@ -65,44 +43,67 @@
         <footer>
             <p>Advice Branch Management</p>
         </footer>
-    </div>    
-    <script>
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var form = event.target;
-            var formData = new FormData(form);
+    </div>
 
-            fetch(form.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.result === 'success') {
-                    Swal.fire({
-                        title: 'สำเร็จ!',
-                        text: 'การลงทะเบียนสำเร็จ',
-                        icon: 'success',
-                        confirmButtonText: 'ตกลง'
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'ข้อผิดพลาด!',
-                        text: 'เกิดข้อผิดพลาด: ' + data.error,
-                        icon: 'error',
-                        confirmButtonText: 'ตกลง'
-                    });
-                }
-            })
-            .catch(error => {
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        async function main() {
+            await liff.init({ liffId: "2005997140-0qja2Nyx" });
+
+            document.getElementById('lineLoginButton').addEventListener('click', () => {
+                liff.login();
+            });
+
+            if (liff.isLoggedIn()) {
+                const profile = await liff.getProfile();
+                document.getElementById('fullname').value = profile.displayName;
+                document.getElementById('userId').value = profile.userId;
+                document.getElementById('lineProfilePic').value = profile.pictureUrl;
+                document.getElementById('signupForm').style.display = 'block';
+                document.getElementById('lineLoginButton').style.display = 'none';
+            }
+        }
+
+        main();
+    </script>    
+
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var form = event.target;
+        var formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result === 'success') {
+                Swal.fire({
+                    title: 'สำเร็จ!',
+                    text: 'การลงทะเบียนสำเร็จ',
+                    icon: 'success',
+                    confirmButtonText: 'ตกลง'
+                });
+            } else {
                 Swal.fire({
                     title: 'ข้อผิดพลาด!',
-                    text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ',
+                    text: 'เกิดข้อผิดพลาด: ' + data.error,
                     icon: 'error',
                     confirmButtonText: 'ตกลง'
                 });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                title: 'ข้อผิดพลาด!',
+                text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ',
+                icon: 'error',
+                confirmButtonText: 'ตกลง'
             });
         });
-    </script>
+    });
+</script>
 </body>
 </html>
