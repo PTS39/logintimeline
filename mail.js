@@ -29,15 +29,18 @@ const firebaseConfig = {
   
     saveMessages(fullname, username, email, password, userId, lineProfilePic);
   
-    //   enable alert
-    document.querySelector(".alert").style.display = "block";
+    // enable alert
+    const alertElement = document.querySelector(".alert");
+    if (alertElement) {
+      alertElement.style.display = "block";
   
-    //   remove the alert
-    setTimeout(() => {
-      document.querySelector(".alert").style.display = "none";
-    }, 3000);
+      // remove the alert after 3 seconds
+      setTimeout(() => {
+        alertElement.style.display = "none";
+      }, 3000);
+    }
   
-    //   reset the form
+    // reset the form
     document.getElementById("signupForm").reset();
   }
   
@@ -45,15 +48,16 @@ const firebaseConfig = {
     var newContactForm = contactFormDB.push();
   
     newContactForm.set({
-        fullname: fullname,
-        username: username,
-        email: email,
-        password: password,
-        userId: userId,
-        lineProfilePic: lineProfilePic,
+      fullname: fullname,
+      username: username,
+      email: email,
+      password: password,
+      userId: userId,
+      lineProfilePic: lineProfilePic
     });
   };
   
   const getElementVal = (id) => {
     return document.getElementById(id).value;
   };
+  
