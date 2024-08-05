@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เข้าระบบลงเวลา</title>
     <link rel="stylesheet" href="css/login.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
 <body>
     <div class="login-container">
         <div class="logo">
@@ -27,48 +25,9 @@
             <button type="submit">เข้าสู่ระบบ</button>
         </form>
         <footer>
-            <p>Advice Branch Management</p>
+            <a src="login.js">Advice Branch Management Register</a>
         </footer>
     </div>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var form = event.target;
-            var formData = new FormData(form);
-
-            fetch('https://script.google.com/macros/s/AKfycbwx8tjRlKf59AbrRtIStAj-wB5sKRot6kJsRAtQShvNYb7i1T0BvGIql2pD3c4LWV5ZVw/exec', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.result === 'success') {
-                    Swal.fire({
-                        title: 'สำเร็จ!',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonText: 'ตกลง'
-                    }).then(() => {
-                        window.location.href = 'your_redirect_page.html'; // เปลี่ยนเส้นทางหลังจากล็อกอินสำเร็จ
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'ข้อผิดพลาด!',
-                        text: data.message,
-                        icon: 'error',
-                        confirmButtonText: 'ตกลง'
-                    });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'ข้อผิดพลาด!',
-                    text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ',
-                    icon: 'error',
-                    confirmButtonText: 'ตกลง'
-                });
-            });
-        });
-    </script>
+    <script src="login.js"></script>   
 </body>
 </html>
