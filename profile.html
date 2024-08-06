@@ -8,24 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js"></script>
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCHNHthCnCc4lvSSbWSdybcmPAZnhkgrVQ",
-            authDomain: "linetimefirebase.firebaseapp.com",
-            databaseURL: "https://linetimefirebase-default-rtdb.firebaseio.com",
-            projectId: "linetimefirebase",
-            storageBucket: "linetimefirebase.appspot.com",
-            messagingSenderId: "936705360497",
-            appId: "1:936705360497:web:8bcc8bf952e58d1f93d1d0",
-            measurementId: "G-S3DHVD10LD"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-
         function initializeLine() {
             liff.init({
                 liffId: "2005997140-0qja2Nyx" // แทนที่ด้วย LIFF ID ของคุณ
@@ -161,57 +144,111 @@
         function submitForm() {
             var formData = new FormData(document.getElementById('clockForm'));
 
-            // แปลง formData เป็น object
-            var dataObject = {};
-            formData.forEach((value, key) => {
-                dataObject[key] = value;
-            });
-
-            // บันทึกข้อมูลลง Firebase Realtime Database
-            var database = firebase.database();
-            database.ref('attendance/' + dataObject.employeeId).push(dataObject)
-                .then(() => {
+            fetch('https://script.google.com/macros/s/AKfycbzP73-gJ1vrPzroUSKS7UcQMiKoXrMAubFWu1DZKOONmL-Yh3bnXF0xSRoxoYqDXrKa/exec', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+            .then(responseData => {
+                if (responseData.result === 'success') {
                     alert('บันทึกข้อมูลเรียบร้อยแล้ว');
                     closeForm();
-                })
-                .catch(error => {
-                    console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล:', error);
-                });
+                } else {
+                    alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+            });
         }
 
+        function showLocationPopup() {
+            getLocation(function(latitude, longitude) {
+                var locationText = "Latitude: " + latitude + "\nLongitude: " + longitude;
+                alert(locationText);
+                showMap(latitude, longitude);
+            });
+        }
+
+        var map; // กำหนดตัวแปร map ให้เป็น global
+
+        function showMap(latitude, longitude) {
+            var mapDiv = document.getElementById('map');
+            mapDiv.style.display = 'block';
+
+            if (map) {
+                // ถ้า map มีอยู่แล้ว ให้เปลี่ยนตำแหน่งและซูมเข้า
+                map.setView([latitude, longitude], 13);
+                L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup('You are here.')
+                    .openPopup();
+            } else {
+                // ถ้า map ยังไม่มี ให้สร้างใหม่
+                map = L.map('map').setView([latitude, longitude], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+
+                L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup('You are here.')
+                    .openPopup();
+            }
+        }
     </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome, <span id="fullName"></span></h1>
-        <h2>Employee ID: <span id="employeeId"></span></h2>
-        <h2>Position: <span id="position"></span></h2>
-        <h2>Current Time: <span id="currentTime"></span></h2>
-        <button class="clockInBtn" onclick="openForm('Clock In')">Clock In</button>
-        <button class="clockOutBtn" onclick="openForm('Clock Out')">Clock Out</button>
-    </div>
+    <div class="profile-form">
+        <h1>Profile</h1>
+        <div class="container">
+            <div class="main">
+                <div class="content" id="contentid">
+                    <h2>Profile Information</h2>
+                    <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+                    <p><strong>Employee ID:</strong> <span id="employeeId"></span></p>
+                    <p><strong>Position:</strong> <span id="position"></span></p>
+                    <p><strong>Current Time:</strong> <span id="currentTime"></span></p>
+                    <button type="button" class="btn btn-map" onclick="showLocationPopup()">กดเพื่อเช็คที่อยู่ของคุณ</button>
 
-    <div id="overlay" class="overlay" onclick="closeForm()"></div>
-    <div id="popupForm" class="popupForm">
-        <h2>รายละเอียดการบันทึกข้อมูล</h2>
-        <form id="clockForm">
-            <input type="hidden" id="formEmployeeId" name="employeeId">
-            <input type="hidden" id="formFullName" name="fullName">
-            <input type="hidden" id="formPosition" name="position">
-            <input type="hidden" id="formLatitude" name="latitude">
-            <input type="hidden" id="formLongitude" name="longitude">
-            <input type="hidden" id="formAction" name="action">
-            <input type="hidden" id="formCurrentTime" name="currentTime">
-            <p id="formFullNameText"></p>
-            <p id="formEmployeeIdText"></p>
-            <p id="formPositionText"></p>
-            <p id="formLatitudeText"></p>
-            <p id="formLongitudeText"></p>
-            <p id="formActionText"></p>
-            <p id="formCurrentTimeText"></p>
-            <button type="button" onclick="submitForm()">บันทึกข้อมูล</button>
-        </form>
-        <button type="button" onclick="closeForm()">ปิด</button>
+                    <div class="button-container">
+                        <button id="clockIn" class="btn btn-clock-in" onclick="openForm('Clock In')">Clock In</button>
+                        <button id="clockOut" class="btn btn-clock-out" onclick="openForm('Clock Out')">Clock Out</button>
+                    </div>
+
+                    <form action="logout.php" method="post">
+                        <button type="submit" class="btn btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div class="form-map">
+                    <div id="map" style="height: 400px; width: 100%; display: none;"></div>
+                </div>
+            </div>
+            <!-- ฟอร์มป๊อปอัพ -->
+            <div id="overlay"></div>
+            <div id="popupForm" style="display:none;">
+            <h2>Clock In/Out Confirmation</h2>
+                <p id="formFullNameText"></p>
+                <p id="formEmployeeIdText"></p>
+                <p id="formPositionText"></p>
+                <p id="formLatitudeText"></p>
+                <p id="formLongitudeText"></p>
+                <p id="formActionText"></p>
+                <p id="formCurrentTimeText"></p>
+                <form id="clockForm" method="POST" action="" enctype="multipart/form-data">
+                    <input type="hidden" id="formEmployeeId" name="employeeId">
+                    <input type="hidden" id="formFullName" name="fullName">
+                    <input type="hidden" id="formPosition" name="position">
+                    <input type="hidden" id="formLatitude" name="latitude">
+                    <input type="hidden" id="formLongitude" name="longitude">
+                    <input type="hidden" id="formAction" name="action">
+                    <input type="hidden" id="formCurrentTime" name="currentTime">
+                    <div class="button-container">
+                        <button type="button" class="btn btn-danger" onclick="closeForm()">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 </html>
