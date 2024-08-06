@@ -49,11 +49,11 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* .main {
+.main {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-} */
+}
 
 .content {
     border: 5px solid #dfe5ea;
@@ -87,6 +87,7 @@ button:hover {
 
 .form-map {
     flex-basis: 50%;
+    background: #dfe5ea;
     background-size: cover;
     padding: 5px;
     border-top-right-radius: 8px;
@@ -121,12 +122,12 @@ button:hover {
         margin-bottom: 20px;
     }
 
-    .form-map {
+    /* .form-map {
         flex-basis: 100%;
         border-top-right-radius: 0;
         border-bottom-right-radius: 8px;
         border-bottom-left-radius: 8px;
-    }
+    } */
 }
 
 /* css popup */
@@ -145,7 +146,7 @@ button:hover {
     max-width: 300px;
 }
 
-/* #overlay {
+#overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -154,7 +155,7 @@ button:hover {
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
     display: none;
-} */
+}
 
 .button-container {
     display: flex;
