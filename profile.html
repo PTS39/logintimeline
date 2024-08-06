@@ -122,7 +122,7 @@
         function submitForm() {
             var formData = new FormData(document.getElementById('clockForm'));
 
-            fetch('https://script.google.com/macros/s/AKfycbx0s5Je94T4tCZqnkfusXt3qjOeZuDETvGDW5i_RnKBcC891AJvByidWbZB81aH_xZD/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbxESwcPq45JcP_Ydet_2CyYTgqqgi55ppo_twr02q2Cwi7SQ73sgtEEa9mKeoGBqZ9s/exec', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -167,7 +167,7 @@
             var employeeId = document.getElementById('employeeId').innerText;
             var today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-            fetch(`https://script.google.com/macros/s/AKfycbx0s5Je94T4tCZqnkfusXt3qjOeZuDETvGDW5i_RnKBcC891AJvByidWbZB81aH_xZD/exec?employeeId=${employeeId}&date=${today}`)
+            fetch(`https://script.google.com/macros/s/AKfycbxESwcPq45JcP_Ydet_2CyYTgqqgi55ppo_twr02q2Cwi7SQ73sgtEEa9mKeoGBqZ9s/exec?employeeId=${employeeId}&date=${today}`)
                 .then(response => response.json())
                 .then(data => {
                     if (action === 'Clock In' && data.result === 'alreadyClockIn') {
@@ -191,54 +191,42 @@
     </script>
 </head>
 <body>
-    <div class="profile-form">
-        <h1>Profile</h1>
-        <div class="container">
-            <div class="main">
-                <div class="content" id="contentid">
-                    <h2>Profile Information</h2>
-                    <p><strong>Full Name:</strong> <span id="fullName"></span></p>
-                    <p><strong>Employee ID:</strong> <span id="employeeId"></span></p>
-                    <p><strong>Position:</strong> <span id="position"></span></p>
-                    <p><strong>Current Time:</strong> <span id="currentTime"></span></p>
-                    <button type="button" class="btn btn-map" onclick="showLocationPopup()">กดเพื่อเช็คที่อยู่ของคุณ</button>
-
-                    <div class="button-container">
-                        <button id="clockIn" class="btn btn-clock-in" onclick="openForm('Clock In')">Clock In</button>
-                        <button id="clockOut" class="btn btn-clock-out" onclick="openForm('Clock Out')">Clock Out</button>
-                    </div>
-
-                    <form action="logout.php" method="post">
-                        <button type="submit" class="btn btn-logout">Logout</button>
-                    </form>
-                </div>
-            </div>
-            <!-- ฟอร์มป๊อปอัพ -->
-            <div id="overlay"></div>
-            <div id="popupForm" style="display:none;">
-            <h2>Clock In/Out Confirmation</h2>
-                <p id="formFullNameText"></p>
-                <p id="formEmployeeIdText"></p>
-                <p id="formPositionText"></p>
-                <p id="formLatitudeText"></p>
-                <p id="formLongitudeText"></p>
-                <p id="formActionText"></p>
-                <p id="formCurrentTimeText"></p>
-                <form id="clockForm" method="POST" action="" enctype="multipart/form-data">
-                    <input type="hidden" id="formEmployeeId" name="employeeId">
-                    <input type="hidden" id="formFullName" name="fullName">
-                    <input type="hidden" id="formPosition" name="position">
-                    <input type="hidden" id="formLatitude" name="latitude">
-                    <input type="hidden" id="formLongitude" name="longitude">
-                    <input type="hidden" id="formAction" name="action">
-                    <input type="hidden" id="formCurrentTime" name="currentTime">
-                    <div class="button-container">
-                        <button type="button" class="btn btn-danger" onclick="closeForm()">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
-                    </div>
-                </form>
-            </div>
+    <div id="profile-container">
+        <h2>Profile</h2>
+        <div id="profileInfo">
+            <p><strong>Name:</strong> <span id="fullName"></span></p>
+            <p><strong>Employee ID:</strong> <span id="employeeId"></span></p>
+            <p><strong>Position:</strong> <span id="position"></span></p>
         </div>
+        <p><strong>Current Time:</strong> <span id="currentTime"></span></p>
+        <div id="buttons">
+            <button id="clockIn" class="btn btn-clock-in" onclick="checkClockActions('Clock In')">Clock In</button>
+            <button id="clockOut" class="btn btn-clock-out" onclick="checkClockActions('Clock Out')">Clock Out</button>
+        </div>
+        <button class="btn btn-location" onclick="showLocationPopup()">กดเพื่อเช็คที่อยู่ของคุณ</button>
+        <div id="map" style="display:none; height: 400px;"></div>
+    </div>
+
+    <div id="overlay" class="overlay" style="display:none;"></div>
+    <div id="popupForm" class="popup-form" style="display:none;">
+        <form id="clockForm">
+            <input type="hidden" id="formEmployeeId" name="employeeId">
+            <input type="hidden" id="formFullName" name="fullName">
+            <input type="hidden" id="formPosition" name="position">
+            <input type="hidden" id="formLatitude" name="latitude">
+            <input type="hidden" id="formLongitude" name="longitude">
+            <input type="hidden" id="formAction" name="action">
+            <input type="hidden" id="formCurrentTime" name="currentTime">
+            <p id="formFullNameText"></p>
+            <p id="formEmployeeIdText"></p>
+            <p id="formPositionText"></p>
+            <p id="formLatitudeText"></p>
+            <p id="formLongitudeText"></p>
+            <p id="formActionText"></p>
+            <p id="formCurrentTimeText"></p>
+            <button type="button" onclick="submitForm()">Submit</button>
+            <button type="button" onclick="closeForm()">Cancel</button>
+        </form>
     </div>
 </body>
 </html>
