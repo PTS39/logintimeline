@@ -95,7 +95,7 @@ button:hover {
     height: 100%;
 }
 
-@media (max-width: 320px) {
+@media (max-width: 786px) {
     body {
         flex-direction: column;
         padding: 20px;
