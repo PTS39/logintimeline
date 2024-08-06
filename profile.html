@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
         function initializeLine() {
             liff.init({
-                liffId: "2005997140-0qja2Nyx" // แทนที่ด้วย LIFF ID ของคุณ
+                liffId: "YOUR_LIFF_ID" // แทนที่ด้วย LIFF ID ของคุณ
             }).then(() => {
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(profile => {
@@ -122,7 +122,7 @@
         function submitForm() {
             var formData = new FormData(document.getElementById('clockForm'));
 
-            fetch('https://script.google.com/macros/s/AKfycbx2nUcR5VBfQYk52wQto5_cPGOoKsFtyPkOf1Xr5MaT3_vniiyaVzXAZxbtkjTQMCUV/exec', {
+            fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
