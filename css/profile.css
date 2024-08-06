@@ -28,14 +28,12 @@ body {
 img {
     width: 100px;
     height: 100px;
-    margin-top: 20px;
+    margin: auto;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 20px;
-    left: 50px;
-    transform: translateY(-50%);
+    border-radius: 50%;
 }
 
 .container {
@@ -52,6 +50,7 @@ h1 {
 }
 
 .main {
+    display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
 }
@@ -61,6 +60,7 @@ h1 {
     border-radius: 8px;
     flex-basis: 50%;
     padding: 20px;
+    margin-bottom: 20px;
 }
 
 input[type="file"] {
@@ -101,8 +101,16 @@ button:hover {
     height: 100%;
 }
 
-
 @media (max-width: 736px) {
+    body {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .profile-form {
+        padding: 20px;
+    }
+
     .main {
         flex-direction: column;
         align-items: center;
@@ -111,6 +119,14 @@ button:hover {
     .content {
         flex-basis: 100%;
         padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-map {
+        flex-basis: 100%;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
     }
 }
 
@@ -126,7 +142,8 @@ button:hover {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     border-radius: 8px;
-    width: 300px;
+    width: 90%;
+    max-width: 300px;
 }
 
 #overlay {
@@ -144,6 +161,8 @@ button:hover {
     display: flex;
     gap: 10px; /* ระยะห่างระหว่างปุ่ม */
     margin-top: 20px; /* ระยะห่างจากเนื้อหาข้างบน */
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .btn {
