@@ -51,7 +51,11 @@
                     callback(latitude, longitude);
                 });
             } else {
-                alert("Geolocation is not supported by this browser.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Geolocation is not supported by this browser.'
+                });
             }
         }
 
@@ -85,16 +89,24 @@
 
         function openForm(action) {
             if (action === 'Clock In' && !isValidClockInTime()) {
-                alert("คุณสามารถกดปุ่ม Clock In ได้ในเวลา 06.00 ถึง 12.59 เท่านั้น");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Time',
+                    text: 'คุณสามารถกดปุ่ม Clock In ได้ในเวลา 06.00 ถึง 12.59 เท่านั้น'
+                });
                 return;
             }
             if (action === 'Clock Out' && !isValidClockOutTime()) {
-                alert("คุณสามารถกดปุ่ม Clock Out ได้ในเวลา 13.00 ถึง 05.59 เท่านั้น");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Time',
+                    text: 'คุณสามารถกดปุ่ม Clock Out ได้ในเวลา 13.00 ถึง 05.59 เท่านั้น'
+                });
                 return;
             }
 
             getLocation(function(latitude, longitude) {
-                var officeLatitude = 15.236019;  // กำหนดค่าที่ตั้งสำนักงาน 15.236019, 104.847245
+                var officeLatitude = 15.236019;  // กำหนดค่าที่ตั้งสำนักงาน
                 var officeLongitude = 104.847245;  // กำหนดค่าที่ตั้งสำนักงาน
                 var distance = calculateDistance(latitude, longitude, officeLatitude, officeLongitude);
 
@@ -107,39 +119,48 @@
                     confirmMessage = "คุณอยู่นอกพื้นที่บริษัท คุณอยู่ห่างจากบริษัทประมาณ " + distance.toFixed(2) + " เมตร คุณต้องการบันทึกข้อมูลหรือไม่?";
                 }
 
-                if (distance > 10 && !confirm(confirmMessage)) {
-                    return;
+                if (distance > 10) {
+                    Swal.fire({
+                        title: 'Confirm',
+                        text: confirmMessage,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, save it!',
+                        cancelButtonText: 'No, cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            submitClockData(action, latitude, longitude);
+                        }
+                    });
+                } else {
+                    submitClockData(action, latitude, longitude);
                 }
-
-                var fullName = document.getElementById('fullName').innerText;
-                var employeeId = document.getElementById('employeeId').innerText;
-                var position = document.getElementById('position').innerText;
-                var currentTime = document.getElementById('currentTime').innerText;
-
-                document.getElementById('formEmployeeId').value = employeeId;
-                document.getElementById('formFullName').value = fullName;
-                document.getElementById('formPosition').value = position;
-                document.getElementById('formLatitude').value = latitude;
-                document.getElementById('formLongitude').value = longitude;
-                document.getElementById('formAction').value = action;
-                document.getElementById('formCurrentTime').value = currentTime;
-
-                document.getElementById('formFullNameText').innerText = 'ชื่อ: ' + fullName;
-                document.getElementById('formEmployeeIdText').innerText = 'รหัสพนักงาน: ' + employeeId;
-                document.getElementById('formPositionText').innerText = 'ตำแหน่ง: ' + position;
-                document.getElementById('formLatitudeText').innerText = 'Latitude: ' + latitude;
-                document.getElementById('formLongitudeText').innerText = 'Longitude: ' + longitude;
-                document.getElementById('formActionText').innerText = 'Action: ' + action;
-                document.getElementById('formCurrentTimeText').innerText = 'Current Time: ' + currentTime;
-
-                // document.getElementById('overlay').style.display = 'block';
-                document.getElementById('popupForm').style.display = 'block';
             });
         }
 
-        function closeForm() {
-            // document.getElementById('overlay').style.display = 'none';
-            document.getElementById('popupForm').style.display = 'none';
+        function submitClockData(action, latitude, longitude) {
+            var fullName = document.getElementById('fullName').innerText;
+            var employeeId = document.getElementById('employeeId').innerText;
+            var position = document.getElementById('position').innerText;
+            var currentTime = document.getElementById('currentTime').innerText;
+
+            document.getElementById('formEmployeeId').value = employeeId;
+            document.getElementById('formFullName').value = fullName;
+            document.getElementById('formPosition').value = position;
+            document.getElementById('formLatitude').value = latitude;
+            document.getElementById('formLongitude').value = longitude;
+            document.getElementById('formAction').value = action;
+            document.getElementById('formCurrentTime').value = currentTime;
+
+            document.getElementById('formFullNameText').innerText = 'ชื่อ: ' + fullName;
+            document.getElementById('formEmployeeIdText').innerText = 'รหัสพนักงาน: ' + employeeId;
+            document.getElementById('formPositionText').innerText = 'ตำแหน่ง: ' + position;
+            document.getElementById('formLatitudeText').innerText = 'Latitude: ' + latitude;
+            document.getElementById('formLongitudeText').innerText = 'Longitude: ' + longitude;
+            document.getElementById('formActionText').innerText = 'Action: ' + action;
+            document.getElementById('formCurrentTimeText').innerText = 'Current Time: ' + currentTime;
+
+            document.getElementById('popupForm').style.display = 'block';
         }
 
         function submitForm() {
@@ -151,21 +172,37 @@
             }).then(response => response.json())
             .then(responseData => {
                 if (responseData.result === 'success') {
-                    alert('บันทึกข้อมูลเรียบร้อยแล้ว');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'บันทึกข้อมูลเรียบร้อยแล้ว'
+                    });
                     closeForm();
                 } else {
-                    alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
+                    });
                 }
             }).catch(error => {
                 console.error('Error:', error);
-                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
+                });
             });
         }
 
         function showLocationPopup() {
             getLocation(function(latitude, longitude) {
                 var locationText = "Latitude: " + latitude + "\nLongitude: " + longitude;
-                alert(locationText);
+                Swal.fire({
+                    title: 'Your Location',
+                    text: locationText,
+                    icon: 'info'
+                });
                 showMap(latitude, longitude);
             });
         }
@@ -196,6 +233,11 @@
                     .openPopup();
             }
         }
+
+        function closeForm() {
+            document.getElementById('popupForm').style.display = 'none';
+        }
+
     </script>
 </head>
 <body>
