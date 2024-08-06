@@ -70,18 +70,40 @@
             return distance;
         }
 
+        function isValidClockInTime() {
+            var now = new Date();
+            var hours = now.getHours();
+            return (hours >= 6 && hours <= 12);
+        }
+
+        function isValidClockOutTime() {
+            var now = new Date();
+            var hours = now.getHours();
+            return (hours >= 13 || hours < 6);
+        }
+
         function openForm(action) {
+            if (action === 'Clock In' && !isValidClockInTime()) {
+                alert("คุณสามารถกดปุ่ม Clock In ได้ในเวลา 06.00 ถึง 12.59 เท่านั้น");
+                return;
+            }
+            if (action === 'Clock Out' && !isValidClockOutTime()) {
+                alert("คุณสามารถกดปุ่ม Clock Out ได้ในเวลา 13.00 ถึง 05.59 เท่านั้น");
+                return;
+            }
+
             getLocation(function(latitude, longitude) {
                 var officeLatitude = 15.2752837;  // กำหนดค่าที่ตั้งสำนักงาน
                 var officeLongitude = 104.7960272;  // กำหนดค่าที่ตั้งสำนักงาน
                 var distance = calculateDistance(latitude, longitude, officeLatitude, officeLongitude);
 
+                var confirmMessage;
                 if (distance > 999) {
                     var distanceKm = Math.floor(distance / 1000);
                     var distanceM = distance % 1000;
-                    var confirmMessage = "คุณอยู่นอกพื้นที่บริษัท คุณอยู่ห่างจากบริษัทประมาณ " + distanceKm + " กิโลเมตร " + distanceM.toFixed(2) + " เมตร คุณต้องการบันทึกข้อมูลหรือไม่?";
+                    confirmMessage = "คุณอยู่นอกพื้นที่บริษัท คุณอยู่ห่างจากบริษัทประมาณ " + distanceKm + " กิโลเมตร " + distanceM.toFixed(2) + " เมตร คุณต้องการบันทึกข้อมูลหรือไม่?";
                 } else if (distance > 10) {
-                    var confirmMessage = "คุณอยู่นอกพื้นที่บริษัท คุณอยู่ห่างจากบริษัทประมาณ " + distance.toFixed(2) + " เมตร คุณต้องการบันทึกข้อมูลหรือไม่?";
+                    confirmMessage = "คุณอยู่นอกพื้นที่บริษัท คุณอยู่ห่างจากบริษัทประมาณ " + distance.toFixed(2) + " เมตร คุณต้องการบันทึกข้อมูลหรือไม่?";
                 }
 
                 if (distance > 10 && !confirm(confirmMessage)) {
@@ -149,30 +171,30 @@
 
         var map; // กำหนดตัวแปร map ให้เป็น global
 
-function showMap(latitude, longitude) {
-    var mapDiv = document.getElementById('map');
-    mapDiv.style.display = 'block';
+        function showMap(latitude, longitude) {
+            var mapDiv = document.getElementById('map');
+            mapDiv.style.display = 'block';
 
-    if (map) {
-        // ถ้า map มีอยู่แล้ว ให้เปลี่ยนตำแหน่งและซูมเข้า
-        map.setView([latitude, longitude], 13);
-        L.marker([latitude, longitude]).addTo(map)
-            .bindPopup('You are here.')
-            .openPopup();
-    } else {
-        // ถ้า map ยังไม่มี ให้สร้างใหม่
-        map = L.map('map').setView([latitude, longitude], 13);
+            if (map) {
+                // ถ้า map มีอยู่แล้ว ให้เปลี่ยนตำแหน่งและซูมเข้า
+                map.setView([latitude, longitude], 13);
+                L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup('You are here.')
+                    .openPopup();
+            } else {
+                // ถ้า map ยังไม่มี ให้สร้างใหม่
+                map = L.map('map').setView([latitude, longitude], 13);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
 
-        L.marker([latitude, longitude]).addTo(map)
-            .bindPopup('You are here.')
-            .openPopup();
-    }
-}
+                L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup('You are here.')
+                    .openPopup();
+            }
+        }
     </script>
 </head>
 <body>
