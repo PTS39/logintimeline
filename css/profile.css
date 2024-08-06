@@ -28,7 +28,7 @@ body {
 }
 
 img {
-    width: 200px;
+    width: 150px;
     height: auto; /* ปรับ height ให้อัตโนมัติเพื่อให้คงอัตราส่วน */
     margin: auto;
     margin-bottom: 20px;
