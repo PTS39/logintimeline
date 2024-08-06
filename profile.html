@@ -8,7 +8,27 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
     <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCHNHthCnCc4lvSSbWSdybcmPAZnhkgrVQ",
+            authDomain: "linetimefirebase.firebaseapp.com",
+            databaseURL: "https://linetimefirebase-default-rtdb.firebaseio.com",
+            projectId: "linetimefirebase",
+            storageBucket: "linetimefirebase.appspot.com",
+            messagingSenderId: "936705360497",
+            appId: "1:936705360497:web:8bcc8bf952e58d1f93d1d0",
+            measurementId: "G-S3DHVD10LD"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <script>
+        // ฟังก์ชันที่มีอยู่ในโค้ดของคุณ
         function initializeLine() {
             liff.init({
                 liffId: "2005997140-0qja2Nyx" // แทนที่ด้วย LIFF ID ของคุณ
@@ -142,19 +162,20 @@
         }
 
         function submitForm() {
-            var formData = new FormData(document.getElementById('clockForm'));
+            var formData = {
+                employeeId: document.getElementById('formEmployeeId').value,
+                fullName: document.getElementById('formFullName').value,
+                position: document.getElementById('formPosition').value,
+                latitude: document.getElementById('formLatitude').value,
+                longitude: document.getElementById('formLongitude').value,
+                action: document.getElementById('formAction').value,
+                currentTime: document.getElementById('formCurrentTime').value
+            };
 
-            fetch('https://script.google.com/macros/s/AKfycbzP73-gJ1vrPzroUSKS7UcQMiKoXrMAubFWu1DZKOONmL-Yh3bnXF0xSRoxoYqDXrKa/exec', {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
-            .then(responseData => {
-                if (responseData.result === 'success') {
-                    alert('บันทึกข้อมูลเรียบร้อยแล้ว');
-                    closeForm();
-                } else {
-                    alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
-                }
+            // บันทึกข้อมูลลง Firebase Realtime Database
+            firebase.database().ref('attendance').push(formData).then(() => {
+                alert('บันทึกข้อมูลเรียบร้อยแล้ว');
+                closeForm();
             }).catch(error => {
                 console.error('Error:', error);
                 alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
