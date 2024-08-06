@@ -14,12 +14,14 @@ body {
     min-height: 100vh;
     background: #4e34b6;
     margin: 0;
+    padding: 20px; /* เพิ่ม padding เพื่อลดปัญหาการชนของคอนเทนต์ */
 }
 
 .profile-form {
-    margin: 10px auto;
-    max-width: 800px;
-    padding: 30px;
+    margin: 0 auto;
+    max-width: 100%; /* ปรับให้ใช้พื้นที่เต็มที่ในหน้าจอ */
+    width: 100%; /* ใช้ 100% ของพื้นที่หน้าจอ */
+    padding: 20px; /* ปรับ padding ให้เหมาะสม */
     background: #fff;
     border-radius: 8px;
     box-shadow: 2px 9px 49px -17px rgba(0, 0, 0, 0.1);
@@ -27,32 +29,31 @@ body {
 
 img {
     width: 100px;
-    height: 100px;
+    height: auto; /* ปรับ height ให้อัตโนมัติเพื่อให้คงอัตราส่วน */
     margin: auto;
     margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block; /* ปรับการแสดงผลของภาพ */
     border-radius: 50%;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 100%; /* ปรับให้ใช้พื้นที่เต็มที่ในหน้าจอ */
+    width: 100%; /* ใช้ 100% ของพื้นที่หน้าจอ */
     margin: 0 auto;
 }
 
 h1 {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 2rem; /* ลดขนาดฟอนต์ในหน้าจอเล็ก */
     font-weight: 400;
     color: #4e34b6;
-    margin-bottom: 30px;
+    margin-bottom: 20px; /* ลด margin ด้านล่าง */
 }
 
 .content {
     border: 5px solid #dfe5ea;
     border-radius: 8px;
-    flex-basis: 50%;
+    width: 100%; /* ใช้พื้นที่เต็มที่ */
     padding: 20px;
     margin-bottom: 20px;
 }
@@ -80,12 +81,11 @@ button:hover {
 }
 
 .form-map {
-    flex-basis: 50%;
+    width: 100%; /* ใช้พื้นที่เต็มที่ */
     background: #dfe5ea;
     background-size: cover;
     padding: 5px;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-radius: 8px;
     align-items: center;
     display: grid;
 }
@@ -98,11 +98,11 @@ button:hover {
 @media (max-width: 786px) {
     body {
         flex-direction: column;
-        padding: 20px;
+        padding: 10px; /* ปรับ padding สำหรับอุปกรณ์ขนาดเล็ก */
     }
 
     .profile-form {
-        padding: 20px;
+        padding: 15px; /* ปรับ padding ให้เหมาะสม */
     }
 
     .main {
@@ -111,16 +111,14 @@ button:hover {
     }
     
     .content {
-        flex-basis: 100%;
-        padding: 20px;
+        width: 100%; /* ใช้พื้นที่เต็มที่ */
+        padding: 15px; /* ลด padding ให้เหมาะสม */
         margin-bottom: 20px;
     }
 
     .form-map {
-        flex-basis: 100%;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 8px;
-        border-bottom-left-radius: 8px;
+        width: 100%; /* ใช้พื้นที่เต็มที่ */
+        border-radius: 8px; /* ให้ขอบมีความโค้ง */
     }
 }
 
