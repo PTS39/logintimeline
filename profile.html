@@ -147,21 +147,32 @@
             });
         }
 
-        function showMap(latitude, longitude) {
-            var mapDiv = document.getElementById('map');
-            mapDiv.style.display = 'block';
+        var map; // กำหนดตัวแปร map ให้เป็น global
 
-            var map = L.map('map').setView([latitude, longitude], 13);
+function showMap(latitude, longitude) {
+    var mapDiv = document.getElementById('map');
+    mapDiv.style.display = 'block';
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap'
-            }).addTo(map);
+    if (map) {
+        // ถ้า map มีอยู่แล้ว ให้เปลี่ยนตำแหน่งและซูมเข้า
+        map.setView([latitude, longitude], 13);
+        L.marker([latitude, longitude]).addTo(map)
+            .bindPopup('You are here.')
+            .openPopup();
+    } else {
+        // ถ้า map ยังไม่มี ให้สร้างใหม่
+        map = L.map('map').setView([latitude, longitude], 13);
 
-            L.marker([latitude, longitude]).addTo(map)
-                .bindPopup('You are here.')
-                .openPopup();
-        }
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker([latitude, longitude]).addTo(map)
+            .bindPopup('You are here.')
+            .openPopup();
+    }
+}
     </script>
 </head>
 <body>
