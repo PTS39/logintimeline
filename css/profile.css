@@ -145,7 +145,7 @@ button:hover {
     max-width: 300px;
 }
 
-#overlay {
+/* #overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -154,7 +154,7 @@ button:hover {
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
     display: none;
-}
+} */
 
 .button-container {
     display: flex;
