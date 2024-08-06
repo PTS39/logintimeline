@@ -122,7 +122,7 @@
         function submitForm() {
             var formData = new FormData(document.getElementById('clockForm'));
 
-            fetch('https://script.google.com/macros/s/AKfycbwsoafitEiv_uDMrkdPiUaXPZNXp6u8roCYKZpHKXV8HDvqMx7d1LIY0y0MDWM2zs1G/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbx0s5Je94T4tCZqnkfusXt3qjOeZuDETvGDW5i_RnKBcC891AJvByidWbZB81aH_xZD/exec', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -162,6 +162,32 @@
                 .bindPopup('You are here.')
                 .openPopup();
         }
+
+        function checkClockActions(action) {
+            var employeeId = document.getElementById('employeeId').innerText;
+            var today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+            fetch(`https://script.google.com/macros/s/AKfycbx0s5Je94T4tCZqnkfusXt3qjOeZuDETvGDW5i_RnKBcC891AJvByidWbZB81aH_xZD/exec?employeeId=${employeeId}&date=${today}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (action === 'Clock In' && data.result === 'alreadyClockIn') {
+                        alert('วันนี้คุณได้บันทึกข้อมูลเข้างานแล้ว ไม่สามารถบันทึกข้อมูล Clock In ได้อีก');
+                    } else if (action === 'Clock Out') {
+                        if (data.result === 'notClockIn') {
+                            alert('วันนี้คุณยังไม่ได้บันทึกข้อมูลเข้างาน ต้องบันทึกข้อมูล Clock In ก่อน');
+                        } else if (data.result === 'clockInAndOut') {
+                            alert('วันนี้คุณได้บันทึกข้อมูลครบแล้ว');
+                        } else {
+                            openForm(action);
+                        }
+                    } else {
+                        openForm(action);
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('เกิดข้อผิดพลาดในการตรวจสอบข้อมูล');
+                });
+        }
     </script>
 </head>
 <body>
@@ -185,9 +211,6 @@
                     <form action="logout.php" method="post">
                         <button type="submit" class="btn btn-logout">Logout</button>
                     </form>
-                </div>
-                <div class="form-map">
-                    <div id="map" style="height: 400px; width: 100%; display: none;"></div>
                 </div>
             </div>
             <!-- ฟอร์มป๊อปอัพ -->
