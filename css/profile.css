@@ -25,6 +25,19 @@ body {
     box-shadow: 2px 9px 49px -17px rgba(0, 0, 0, 0.1);
 }
 
+.profile-img {
+    width: 100px;
+    height: 100px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 20px;
+    left: 50px;
+    transform: translateY(-50%);
+}
+
 .container {
     max-width: 800px;
     margin: 0 auto;

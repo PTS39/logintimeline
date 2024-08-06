@@ -18,6 +18,7 @@
                         document.getElementById('fullName').innerText = profile.displayName;
                         document.getElementById('employeeId').innerText = profile.userId;
                         document.getElementById('position').innerText = "ตำแหน่ง"; // เพิ่มข้อมูลตำแหน่งหากมี
+                        document.getElementById('profilePicture').src = profile.pictureUrl; // เพิ่มบรรทัดนี้
                     }).catch(err => console.error(err));
                 } else {
                     liff.login();
@@ -93,8 +94,8 @@
             }
 
             getLocation(function(latitude, longitude) {
-                var officeLatitude = 15.2752837;  // กำหนดค่าที่ตั้งสำนักงาน
-                var officeLongitude = 104.7960272;  // กำหนดค่าที่ตั้งสำนักงาน
+                var officeLatitude = 15.236019;  // กำหนดค่าที่ตั้งสำนักงาน 15.236019, 104.847245
+                var officeLongitude = 104.847245;  // กำหนดค่าที่ตั้งสำนักงาน
                 var distance = calculateDistance(latitude, longitude, officeLatitude, officeLongitude);
 
                 var confirmMessage;
@@ -203,6 +204,9 @@
         <div class="container">
             <div class="main">
                 <div class="content" id="contentid">
+                    <div class="profile-img">
+                        <img id="profilePicture" src="" alt="Profile Picture">
+                    </div>
                     <h2>Profile Information</h2>
                     <p><strong>Full Name:</strong> <span id="fullName"></span></p>
                     <p><strong>Employee ID:</strong> <span id="employeeId"></span></p>
