@@ -3,66 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>โปรไฟล์ผู้ใช้</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="css/profile.css">
-</head>
-<body>
-    <div class="profile-container">
-        <div class="logo">
-            <img src="https://img.advice.co.th/images_nas/advice/oneweb/assets/images/logo-color.png" alt="Advice Intelligence Logo">
-        </div>
-        <h2>Advice | แอดไวซ์ อุบลราชธานี ใกล้สี่แยกสามัคคี ร้านขาย-ซ่อมคอมพิวเตอร์ (Apple อุบลราชธานี)</h2>
-        
-        <div id="profile" style="display: none;">
-            <img id="profilePicture" src="" alt="Profile Picture">
-            <h3 id="displayName"></h3>
-            <p id="userId"></p>
-        </div>
-        
-        <div id="loginPrompt" style="display: none;">
-            <p>กรุณาเข้าสู่ระบบเพื่อดูโปรไฟล์ของคุณ</p>
-            <a href="login.html">เข้าสู่ระบบ</a>
-        </div>
-        
-        <button id="lineLogoutButton" style="display: none;">Logout</button>
-
-        <footer>
-            <p>Advice Branch Management</p>
-        </footer>
-    </div>
-
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
-        async function main() {
-            await liff.init({ liffId: "2005997140-0qja2Nyx" });
-
-            if (liff.isLoggedIn()) {
-                const profile = await liff.getProfile();
-                // Here you would check if the user is registered in your system
-                // For example, make an API call to check user registration status
-                const isRegistered = await checkUserRegistration(profile.userId); // Placeholder function
-
-                if (isRegistered) {
-                    document.getElementById('profilePicture').src = profile.pictureUrl;
-                    document.getElementById('displayName').innerText = profile.displayName;
-                    document.getElementById('userId').innerText = `User ID: ${profile.userId}`;
-                    document.getElementById('profile').style.display = 'block';
-                    document.getElementById('lineLogoutButton').style.display = 'block';
-                    document.getElementById('loginPrompt').style.display = 'none';
+        function initializeLine() {
+            liff.init({
+                liffId: "2005997140-0qja2Nyx" // แทนที่ด้วย LIFF ID ของคุณ
+            }).then(() => {
+                if (liff.isLoggedIn()) {
+                    liff.getProfile().then(profile => {
+                        document.getElementById('fullName').innerText = profile.displayName;
+                        document.getElementById('employeeId').innerText = profile.userId;
+                        document.getElementById('position').innerText = "ตำแหน่ง"; // เพิ่มข้อมูลตำแหน่งหากมี
+                    }).catch(err => console.error(err));
                 } else {
-                    document.getElementById('profile').style.display = 'none';
-                    document.getElementById('loginPrompt').style.display = 'block';
+                    liff.login();
                 }
-            } else {
-                liff.login();
-            }
+            }).catch(err => console.error(err));
+        }
 
-            document.getElementById('lineLogoutButton').addEventListener('click', () => {
-                liff.logout();
-                window.location.reload();
+        function updateTime() {
+            var now = new Date();
+            var formattedTime = now.getFullYear() + '-' +
+                ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
+                ('0' + now.getDate()).slice(-2) + ' ' +
+                ('0' + now.getHours()).slice(-2) + ':' +
+                ('0' + now.getMinutes()).slice(-2) + ':' +
+                ('0' + now.getSeconds()).slice(-2);
+            document.getElementById('currentTime').innerText = formattedTime;
+        }
+
+        setInterval(updateTime, 1000);
+        window.onload = function() {
+            updateTime();
+            initializeLine();
+        };
+
+        function getLocation(callback) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    callback(latitude, longitude);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371e3; // รัศมีของโลก (เมตร)
+            var φ1 = lat1 * Math.PI/180;
+            var φ2 = lat2 * Math.PI/180;
+            var Δφ = (lat2 - lat1) * Math.PI/180;
+            var Δλ = (lon2 - lon1) * Math.PI/180;
+
+            var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                    Math.cos(φ1) * Math.cos(φ2) *
+                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            var distance = R * c; // ระยะทางเป็นเมตร
+            return distance;
+        }
+
+        function openForm(action) {
+            getLocation(function(latitude, longitude) {
+                var officeLatitude = 15.2752837;  // กำหนดค่าที่ตั้งสำนักงาน
+                var officeLongitude = 104.7960272;  // กำหนดค่าที่ตั้งสำนักงาน
+                var distance = calculateDistance(latitude, longitude, officeLatitude, officeLongitude);
+
+                if (distance > 999) {
+                    var distanceKm = Math.floor(distance / 1000);
+                    var distanceM = distance % 1000;
+                    var confirmMessage = "คุณอยู่นอกพื้นที่บริษัท คุณอยู่ห่างจากบริษัทประมาณ " + distanceKm + " กิโลเมตร " + distanceM.toFixed(2) + " เมตร คุณต้องการบันทึกข้อมูลหรือไม่?";
+                } else if (distance > 10) {
+                    var confirmMessage = "คุณอยู่นอกพื้นที่บริษัท คุณอยู่ห่างจากบริษัทประมาณ " + distance.toFixed(2) + " เมตร คุณต้องการบันทึกข้อมูลหรือไม่?";
+                }
+
+                if (distance > 10 && !confirm(confirmMessage)) {
+                    return;
+                }
+
+                var fullName = document.getElementById('fullName').innerText;
+                var employeeId = document.getElementById('employeeId').innerText;
+                var position = document.getElementById('position').innerText;
+                var currentTime = document.getElementById('currentTime').innerText;
+
+                document.getElementById('formEmployeeId').value = employeeId;
+                document.getElementById('formFullName').value = fullName;
+                document.getElementById('formPosition').value = position;
+                document.getElementById('formLatitude').value = latitude;
+                document.getElementById('formLongitude').value = longitude;
+                document.getElementById('formAction').value = action;
+                document.getElementById('formCurrentTime').value = currentTime;
+
+                document.getElementById('formFullNameText').innerText = 'ชื่อ: ' + fullName;
+                document.getElementById('formEmployeeIdText').innerText = 'รหัสพนักงาน: ' + employeeId;
+                document.getElementById('formPositionText').innerText = 'ตำแหน่ง: ' + position;
+                document.getElementById('formLatitudeText').innerText = 'Latitude: ' + latitude;
+                document.getElementById('formLongitudeText').innerText = 'Longitude: ' + longitude;
+                document.getElementById('formActionText').innerText = 'Action: ' + action;
+                document.getElementById('formCurrentTimeText').innerText = 'Current Time: ' + currentTime;
+
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('popupForm').style.display = 'block';
             });
         }
-        main();
+
+        function closeForm() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popupForm').style.display = 'none';
+        }
+
+        function submitForm() {
+            var formData = new FormData(document.getElementById('clockForm'));
+
+            fetch('https://script.google.com/macros/s/AKfycbwsoafitEiv_uDMrkdPiUaXPZNXp6u8roCYKZpHKXV8HDvqMx7d1LIY0y0MDWM2zs1G/exec', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+            .then(responseData => {
+                if (responseData.result === 'success') {
+                    alert('บันทึกข้อมูลเรียบร้อยแล้ว');
+                    closeForm();
+                } else {
+                    alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+            });
+        }
+
+        function showLocationPopup() {
+            getLocation(function(latitude, longitude) {
+                var locationText = "Latitude: " + latitude + "\nLongitude: " + longitude;
+                alert(locationText);
+                showMap(latitude, longitude);
+            });
+        }
+
+        function showMap(latitude, longitude) {
+            var mapDiv = document.getElementById('map');
+            mapDiv.style.display = 'block';
+
+            var map = L.map('map').setView([latitude, longitude], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup('You are here.')
+                .openPopup();
+        }
     </script>
+</head>
+<body>
+    <div class="profile-form">
+        <h1>Profile</h1>
+        <div class="container">
+            <div class="main">
+                <div class="content" id="contentid">
+                    <h2>Profile Information</h2>
+                    <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+                    <p><strong>Employee ID:</strong> <span id="employeeId"></span></p>
+                    <p><strong>Position:</strong> <span id="position"></span></p>
+                    <p><strong>Current Time:</strong> <span id="currentTime"></span></p>
+                    <button type="button" class="btn btn-map" onclick="showLocationPopup()">กดเพื่อเช็คที่อยู่ของคุณ</button>
+
+                    <div class="button-container">
+                        <button id="clockIn" class="btn btn-clock-in" onclick="openForm('Clock In')">Clock In</button>
+                        <button id="clockOut" class="btn btn-clock-out" onclick="openForm('Clock Out')">Clock Out</button>
+                    </div>
+
+                    <form action="logout.php" method="post">
+                        <button type="submit" class="btn btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div class="form-map">
+                    <div id="map" style="height: 400px; width: 100%; display: none;"></div>
+                </div>
+            </div>
+            <!-- ฟอร์มป๊อปอัพ -->
+            <div id="overlay"></div>
+            <div id="popupForm" style="display:none;">
+            <h2>Clock In/Out Confirmation</h2>
+                <p id="formFullNameText"></p>
+                <p id="formEmployeeIdText"></p>
+                <p id="formPositionText"></p>
+                <p id="formLatitudeText"></p>
+                <p id="formLongitudeText"></p>
+                <p id="formActionText"></p>
+                <p id="formCurrentTimeText"></p>
+                <form id="clockForm" method="POST" action="" enctype="multipart/form-data">
+                    <input type="hidden" id="formEmployeeId" name="employeeId">
+                    <input type="hidden" id="formFullName" name="fullName">
+                    <input type="hidden" id="formPosition" name="position">
+                    <input type="hidden" id="formLatitude" name="latitude">
+                    <input type="hidden" id="formLongitude" name="longitude">
+                    <input type="hidden" id="formAction" name="action">
+                    <input type="hidden" id="formCurrentTime" name="currentTime">
+                    <div class="button-container">
+                        <button type="button" class="btn btn-danger" onclick="closeForm()">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
