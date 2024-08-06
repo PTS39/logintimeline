@@ -70,7 +70,28 @@
             return distance;
         }
 
+        function isValidClockInTime() {
+            var now = new Date();
+            var hours = now.getHours();
+            return (hours >= 6 && hours <= 12);
+        }
+
+        function isValidClockOutTime() {
+            var now = new Date();
+            var hours = now.getHours();
+            return (hours >= 13 || hours < 6);
+        }
+
         function openForm(action) {
+            if (action === 'Clock In' && !isValidClockInTime()) {
+                alert("คุณสามารถกดปุ่ม Clock In ได้ในเวลา 06.00 ถึง 12.59 เท่านั้น");
+                return;
+            }
+            if (action === 'Clock Out' && !isValidClockOutTime()) {
+                alert("คุณสามารถกดปุ่ม Clock Out ได้ในเวลา 13.00 ถึง 05.59 เท่านั้น");
+                return;
+            }
+
             getLocation(function(latitude, longitude) {
                 var officeLatitude = 15.2752837;  // กำหนดค่าที่ตั้งสำนักงาน
                 var officeLongitude = 104.7960272;  // กำหนดค่าที่ตั้งสำนักงาน
@@ -122,7 +143,7 @@
         function submitForm() {
             var formData = new FormData(document.getElementById('clockForm'));
 
-            fetch('https://script.google.com/macros/s/AKfycbwnjmJsdyRW5TYNqMzb8rFOSGqndpLBWY__HAWM9btutLLIQB6gtZ4OCSsUfH6ny3hV/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbwo71w2eOwgE9690fdpHNZ2-dbxsWHTwCK8lA-5iaBY-4yEUfjfQdXKyWeYWR8yOEyL/exec', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -193,7 +214,7 @@
             <!-- ฟอร์มป๊อปอัพ -->
             <div id="overlay"></div>
             <div id="popupForm" style="display:none;">
-            <h2>Clock In/Out Confirmation</h2>
+                <h2>Clock In/Out Confirmation</h2>
                 <p id="formFullNameText"></p>
                 <p id="formEmployeeIdText"></p>
                 <p id="formPositionText"></p>
