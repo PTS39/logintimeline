@@ -168,7 +168,7 @@
         function submitForm() {
             var formData = new FormData(document.getElementById('clockForm'));
 
-            fetch('https://script.google.com/macros/s/AKfycbxW6DvT1OlZS1fV2jwxAngBMr9loP2OJq7OpOWL44GZOlCje3xESiTE2yrU7Z8jKDUU/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbxZQ4jW3ddNMXzak9BAgJimzljs-6_DHY7tkKK8MivtjAZB5hXdZ8_NyizOfa4LLXnE/exec', {
                 method: 'POST',
                 body: formData
             })
@@ -200,6 +200,7 @@
         }
 
         document.getElementById('submit-button').addEventListener('click', submitForm);
+
 
 
         function showLocationPopup() {
