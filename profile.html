@@ -168,11 +168,10 @@
         function submitForm() {
             var formData = new FormData(document.getElementById('clockForm'));
 
-            fetch('https://script.google.com/macros/s/AKfycbxZQ4jW3ddNMXzak9BAgJimzljs-6_DHY7tkKK8MivtjAZB5hXdZ8_NyizOfa4LLXnE/exec', {
+            fetch('https://script.google.com/macros/s/AKfycby1z0pbJzt-TFoe_rVc5OkNHsMSeB-2jsz2qFXkkp2LhoKFsZYKag_lAhK9C4nAf0x_/exec', {
                 method: 'POST',
                 body: formData
-            })
-            .then(response => response.json())
+            }).then(response => response.json())
             .then(responseData => {
                 if (responseData.result === 'success') {
                     Swal.fire({
@@ -188,8 +187,7 @@
                         text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
                     });
                 }
-            })
-            .catch(error => {
+            }).catch(error => {
                 console.error('Error:', error);
                 Swal.fire({
                     icon: 'error',
@@ -198,10 +196,6 @@
                 });
             });
         }
-
-        document.getElementById('submit-button').addEventListener('click', submitForm);
-
-
 
         function showLocationPopup() {
             getLocation(function(latitude, longitude) {
