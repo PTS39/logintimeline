@@ -94,7 +94,7 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Invalid Time',
-                    text: 'คุณสามารถกดปุ่ม Clock In ได้ในเวลา 06.00 ถึง 12.59 เท่านั้น'
+                    text: 'คุณสามารถ Check In ได้ในเวลา 08.00 ถึง 12.59 เท่านั้น'
                 });
                 return;
             }
@@ -102,7 +102,7 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Invalid Time',
-                    text: 'คุณสามารถกดปุ่ม Clock Out ได้ในเวลา 13.00 ถึง 05.59 เท่านั้น'
+                    text: 'คุณสามารถ Check Out ได้ในเวลา 13.00 ถึง 20.00 เท่านั้น'
                 });
                 return;
             }
@@ -260,8 +260,8 @@
                     </div>
 
                     <div class="button-container">
-                        <button id="clockIn" class="btn btn-clock-in" onclick="openForm('Clock In')">Clock In</button>
-                        <button id="clockOut" class="btn btn-clock-out" onclick="openForm('Clock Out')">Clock Out</button>
+                        <button id="clockIn" class="btn btn-clock-in" onclick="openForm('Clock In')">Check In</button>
+                        <button id="clockOut" class="btn btn-clock-out" onclick="openForm('Clock Out')">Check Out</button>
                     </div>
 
                     <form action="logout.php" method="post">
@@ -272,7 +272,7 @@
             <!-- ฟอร์มป๊อปอัพ -->
             <!-- <div id="overlay"></div> -->
             <div id="popupForm" style="display:none;">
-            <h2>Clock In/Out Confirmation</h2>
+            <h2>Check In/Out Confirmation</h2>
                 <p id="formFullNameText"></p>
                 <p id="formEmployeeIdText"></p>
                 <p id="formPositionText"></p>

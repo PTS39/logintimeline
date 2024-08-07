@@ -3,31 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เข้าระบบลงเวลา</title>
+    <title>Advice Work</title>
     <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo">
-            <img src="https://img.advice.co.th/images_nas/advice/oneweb/assets/images/logo-color.png" alt="Advice Intelligence Logo">
+    <div class="container">
+        <h1>ADVICE WORK</h1>
+        <div class="card-grid">
+            <div class="card" onclick="openLink('https://branch.advice.co.th/')">
+                <img src="path/to/your/image.png" alt="Advice Branch U036">
+                <p>AdviceBranch U036</p>
+            </div>
+            <div class="card" onclick="openLink('https://globalapi2.advice.co.th/av_staff/av_staff223/login')">
+                <img src="path/to/your/image.png" alt="Advice AV Staff">
+                <p>Advice AV Staff</p>
+            </div>
+            <div class="card" onclick="openLink('https://www.advice.co.th/')">
+                <img src="path/to/your/image.png" alt="Advice Company">
+                <p>Advice Company</p>
+            </div>
+            <div class="card" onclick="openLink('https://example.com/pipeline1')">
+                <img src="path/to/your/image.png" alt="In The Pipeline">
+                <p>In The Pipeline</p>
+            </div>
+            <div class="card" onclick="openLink('https://hr.advice.co.th/LoginERS/login.aspx')">
+                <img src="path/to/your/image.png" alt="Advice HR E-Business Plus">
+                <p>Advice HR E-Business Plus</p>
+            </div>
+            <div class="card" onclick="openLink('https://example.com/pipeline2')">
+                <img src="path/to/your/image.png" alt="In The Pipeline">
+                <p>In The Pipeline</p>
+            </div>
+            <div class="card" onclick="openLink('https://example.com/pipeline3')">
+                <img src="path/to/your/image.png" alt="In The Pipeline">
+                <p>In The Pipeline</p>
+            </div>
         </div>
-        <h2>Advice | แอดไวซ์ อุบลราชธานี ใกล้สี่แยกสามัคคี ร้านขาย-ซ่อมคอมพิวเตอร์ (Apple อุบลราชธานี)</h2>
-        <h3>Input Username & Password</h3>
-        <form id="loginForm">
-            <input type="hidden" name="action" value="login">
-            <div class="input-container">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="input-container">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">เข้าสู่ระบบ</button>
-        </form>
-        <footer>
-            <a href="register.html">Advice Branch Management</a>
-        </footer>
     </div>
     <script src="login.js"></script>
 </body>
