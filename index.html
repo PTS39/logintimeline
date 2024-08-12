@@ -3,43 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advice Work</title>
-    <link rel="stylesheet" href="css/login.css">
+    <title>Attendance Form</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>ADVICE WORK</h1>
-        <div class="card-grid">
-            <div class="card" onclick="openLink('https://branch.advice.co.th/')">
-                <img src="image/advice.jpg" alt="Advice Branch U036">
-                <p>AdviceBranch U036</p>
-            </div>
-            <div class="card" onclick="openLink('https://globalapi2.advice.co.th/av_staff/av_staff223/login')">
-                <img src="image/advice.jpg" alt="Advice AV Staff">
-                <p>Advice AV Staff</p>
-            </div>
-            <div class="card" onclick="openLink('https://www.advice.co.th/')">
-                <img src="image/advice.jpg" alt="Advice Company">
-                <p>Advice Company</p>
-            </div>
-            <div class="card" onclick="openLink('https://example.com/pipeline1')">
-                <img src="image/advice.jpg" alt="In The Pipeline">
-                <p>In The Pipeline</p>
-            </div>
-            <div class="card" onclick="openLink('https://hr.advice.co.th/LoginERS/login.aspx')">
-                <img src="image/advice.jpg" alt="Advice HR E-Business Plus">
-                <p>Advice HR E-Business Plus</p>
-            </div>
-            <div class="card" onclick="openLink('https://example.com/pipeline2')">
-                <img src="image/advice.jpg" alt="In The Pipeline">
-                <p>In The Pipeline</p>
-            </div>
-            <div class="card" onclick="openLink('https://example.com/pipeline3')">
-                <img src="image/advice.jpg" alt="In The Pipeline">
-                <p>In The Pipeline</p>
-            </div>
-        </div>
-    </div>
-    <script src="login.js"></script>
+    <h1>Attendance Form</h1>
+    <button id="loginBtn">Login with LINE</button>
+    <div id="loginStatus"></div>
+    <form id="attendanceForm" style="display:none;">
+        <p>UserID: <span id="userId"></span></p>
+        <p>Username: <span id="username"></span></p>
+        <input type="hidden" id="lat" name="latitude">
+        <input type="hidden" id="lon" name="longitude">
+        <button type="button" onclick="recordAttendance('clockIn')">Clock In</button>
+        <button type="button" onclick="recordAttendance('clockOut')">Clock Out</button>
+    </form>
+
+    <script>
+        let userId = '';
+        let username = '';
+
+        function initializeLineLogin() {
+            liff.init({ liffId: "2006044497-LQ1VvY3q" })
+            .then(() => {
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                } else {
+                    getProfile();
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        function getProfile() {
+            liff.getProfile().then(profile => {
+                userId = profile.userId;
+                username = profile.displayName;
+                document.getElementById("userId").innerText = userId;
+                document.getElementById("username").innerText = username;
+                document.getElementById("attendanceForm").style.display = 'block';
+                document.getElementById("loginBtn").style.display = 'none';
+            }).catch(err => console.error(err));
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    document.getElementById("lat").value = position.coords.latitude;
+                    document.getElementById("lon").value = position.coords.longitude;
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function recordAttendance(action) {
+            getLocation();
+            const data = {
+                userId: userId,
+                username: username,
+                latitude: document.getElementById("lat").value,
+                longitude: document.getElementById("lon").value,
+                action: action
+            };
+
+            fetch('https://script.google.com/macros/s/AKfycbyNI7oodldQawaGM08Hd-i0ygJr0M4xSnQ-MqXNRjvJK777b4hoDZC8lJb5H5Tgr6pQ/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(result => alert(result))
+            .catch(error => console.error('Error:', error));
+        }
+
+        window.onload = initializeLineLogin;
+    </script>
 </body>
 </html>
