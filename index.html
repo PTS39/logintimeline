@@ -67,7 +67,7 @@
                 action: action
             };
 
-            fetch('https://script.google.com/macros/s/AKfycbyNI7oodldQawaGM08Hd-i0ygJr0M4xSnQ-MqXNRjvJK777b4hoDZC8lJb5H5Tgr6pQ/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbyd8IS9lj-6eRkTerPZRaKoqpM0W033If2zKEipCoOVtOZiFFH5NOpF6emprFHeAtpi/exec', {  // แทนที่ 'YOUR_WEB_APP_URL' ด้วย URL ของเว็บแอป
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -78,6 +78,7 @@
             .then(result => alert(result))
             .catch(error => console.error('Error:', error));
         }
+
 
         window.onload = initializeLineLogin;
     </script>
