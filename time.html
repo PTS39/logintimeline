@@ -67,9 +67,16 @@
                 action: action
             };
 
-            google.script.run.withSuccessHandler((response) => {
-                alert(response);
-            }).recordAttendance(data);
+            fetch('https://script.google.com/macros/s/AKfycbyNI7oodldQawaGM08Hd-i0ygJr0M4xSnQ-MqXNRjvJK777b4hoDZC8lJb5H5Tgr6pQ/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(result => alert(result))
+            .catch(error => console.error('Error:', error));
         }
 
         window.onload = initializeLineLogin;
