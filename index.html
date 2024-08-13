@@ -1,87 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Form</title>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <title>ฟอร์มสมัครสมาชิก</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </head>
 <body>
-    <h1>Attendance Form</h1>
-    <button id="loginBtn">Login with LINE</button>
-    <div id="loginStatus"></div>
-    <form id="attendanceForm" style="display:none;">
-        <p>UserID: <span id="userId"></span></p>
-        <p>Username: <span id="username"></span></p>
-        <input type="hidden" id="lat" name="latitude">
-        <input type="hidden" id="lon" name="longitude">
-        <button type="button" onclick="recordAttendance('clockIn')">Clock In</button>
-        <button type="button" onclick="recordAttendance('clockOut')">Clock Out</button>
-    </form>
+    <div class="container">
+        <h2>ฟอร์มสมัครสมาชิก</h2>
+        <form id="registerForm" onsubmit="submitForm(event)">
+            <div class="form-group">
+                <label for="fullName">ชื่อ-นามสกุล:</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+            <div class="form-group">
+                <label for="studentId">รหัสนักศึกษา:</label>
+                <input type="text" id="studentId" name="studentId" required>
+            </div>
+            <div class="form-group">
+                <label for="email">อีเมล:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">เบอร์โทร:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <button type="submit">สมัครสมาชิก</button>
+        </form>
+    </div>
 
     <script>
-        let userId = '';
-        let username = '';
+        let userId, username;
 
-        function initializeLineLogin() {
-            liff.init({ liffId: "2006044497-LQ1VvY3q" })
-            .then(() => {
+        function initializeApp() {
+            liff.init({
+                liffId: "2006044497-LQ1VvY3q"
+            }).then(() => {
                 if (!liff.isLoggedIn()) {
                     liff.login();
                 } else {
-                    getProfile();
+                    liff.getProfile().then(profile => {
+                        userId = profile.userId;
+                        username = profile.displayName;
+                        document.getElementById("registerForm").style.display = "block";
+                    });
                 }
-            })
-            .catch(err => console.error(err));
-        }
-
-        function getProfile() {
-            liff.getProfile().then(profile => {
-                userId = profile.userId;
-                username = profile.displayName;
-                document.getElementById("userId").innerText = userId;
-                document.getElementById("username").innerText = username;
-                document.getElementById("attendanceForm").style.display = 'block';
-                document.getElementById("loginBtn").style.display = 'none';
             }).catch(err => console.error(err));
         }
 
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    document.getElementById("lat").value = position.coords.latitude;
-                    document.getElementById("lon").value = position.coords.longitude;
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
-        function recordAttendance(action) {
-            getLocation();
-            const data = {
+        function submitForm(event) {
+            event.preventDefault();
+            const formData = {
                 userId: userId,
                 username: username,
-                latitude: document.getElementById("lat").value,
-                longitude: document.getElementById("lon").value,
-                action: action
+                fullName: document.getElementById("fullName").value,
+                studentId: document.getElementById("studentId").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
             };
 
-            fetch('https://script.google.com/macros/s/AKfycbzEHuKS7exXdCKCXVy7mE3b0lUl_1qbyI_Mg7BPdKIa0YZE3HxyuL6O6IpNVwHNIwKa/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbyumGmVFqlbrVSrRO4mIwV4DvyBRzB74PgdwfMfP0pVKgiyu9nb0bJrpvOW47xmiVgo/exec', { // เปลี่ยน 'YOUR_WEB_APP_URL' เป็น URL ของ Web App
                 method: 'POST',
-                mode: "cors",
+                body: JSON.stringify(formData),
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+                }
             })
-            .then(response => response.text())
-            .then(result => alert(result))
-            .catch(error => console.error('Error:', error));
+            .then(response => response.json())
+            .then(data => {
+                alert("บันทึกข้อมูลเรียบร้อยแล้ว");
+                document.getElementById("registerForm").reset();
+            });
         }
 
-
-        window.onload = initializeLineLogin;
+        window.onload = initializeApp;
     </script>
 </body>
 </html>
