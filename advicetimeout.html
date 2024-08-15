@@ -1,56 +1,202 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advice Time In/Out</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js" defer></script>
+    <title>Advice Time</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+       body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 20px;
+            border: 2px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 id="pageTitle"></h1>
-        
-        <!-- clock widget start -->
-        <div id="tw_22_1699046851">
-            <div style="width:200px; height:px; margin: 0 auto;">
-                <a href="https://hotelmix.co.th/time/kumphawapi-345330">Kumphawapi</a><br/>
-            </div>
-        </div> 
-        <script type="text/javascript"> 
-            var css_file=document.createElement("link"); 
-            css_file.setAttribute("rel","stylesheet"); 
-            css_file.setAttribute("type","text/css"); 
-            css_file.setAttribute("href","https://s.bookcdn.com//css/cl/bw-cl-c22.css?v=0.0.1"); 
-            document.getElementsByTagName("head")[0].appendChild(css_file); 
-        </script> 
-        <script type="text/javascript"> 
-            function setWidgetData_1699046851(data){ 
-                if(typeof(data) != 'undefined' && data.results.length > 0) { 
-                    for(var i = 0; i < data.results.length; ++i) { 
-                        var objMainBlock = ''; 
-                        var params = data.results[i]; 
-                        objMainBlock = document.getElementById('tw_'+params.widget_type+'_'+params.widget_id); 
-                        if(objMainBlock !== null) objMainBlock.innerHTML = params.html_code; 
-                    } 
-                } 
-            } 
-            var clock_timer_1699046851 = -1; 
-            widgetSrc = "https://widgets.booked.net/time/info?ver=2;domid=1171;type=22;id=1699046851;scode=70241;city_id=;wlangid=30;mode=1;details=0;background=ffffff;border_color=ffffff;color=686868;add_background=ffffff;add_color=333333;head_color=ffffff;border=0;transparent=0"; 
-            var widgetUrl = location.href; 
-            widgetSrc += '&ref=' + widgetUrl; 
-            var wstrackId = ""; 
-            if (wstrackId) { widgetSrc += ';wstrackId=' + wstrackId + ';' } 
-            var timeBookedScript = document.createElement("script"); 
-            timeBookedScript.setAttribute("type", "text/javascript"); 
-            timeBookedScript.src = widgetSrc; 
-            document.body.appendChild(timeBookedScript); 
-        </script>
-        <!-- clock widget end -->
-
-        <div id="map"></div>
-        <button id="actionButton"></button>
+    <h1 id="pageTitle"></h1>
+    <!-- Clock Widget -->
+    <script type="text/javascript">
+        var css_file = document.createElement("link");
+        css_file.setAttribute("rel", "stylesheet");
+        css_file.setAttribute("type", "text/css");
+        css_file.setAttribute("href", "https://s.bookcdn.com//css/cl/bw-cl-c22.css?v=0.0.1");
+        document.getElementsByTagName("head")[0].appendChild(css_file);
+    </script>
+    <div id="tw_22_1699046851">
+        <div style="width:200px; height:px; margin: 0 auto;">
+            <a href="https://hotelmix.co.th/time/kumphawapi-345330">Kumphawapi</a><br/>
+        </div>
     </div>
+    <script type="text/javascript">
+        function setWidgetData_1699046851(data){
+            if (typeof(data) != 'undefined' && data.results.length > 0) {
+                for (var i = 0; i < data.results.length; ++i) {
+                    var objMainBlock = '';
+                    var params = data.results[i];
+                    objMainBlock = document.getElementById('tw_' + params.widget_type + '_' + params.widget_id);
+                    if (objMainBlock !== null) objMainBlock.innerHTML = params.html_code;
+                }
+            }
+        }
+        var clock_timer_1699046851 = -1;
+        widgetSrc = "https://widgets.booked.net/time/info?ver=2;domid=1171;type=22;id=1699046851;scode=70241;city_id=;wlangid=30;mode=1;details=0;background=ffffff;border_color=ffffff;color=686868;add_background=ffffff;add_color=333333;head_color=ffffff;border=0;transparent=0";
+        var widgetUrl = location.href;
+        widgetSrc += '&ref=' + widgetUrl;
+        var wstrackId = "";
+        if (wstrackId) {
+            widgetSrc += ';wstrackId=' + wstrackId + ';'
+        }
+        var timeBookedScript = document.createElement("script");
+        timeBookedScript.setAttribute("type", "text/javascript");
+        timeBookedScript.src = widgetSrc;
+        document.body.appendChild(timeBookedScript);
+    </script>
+    <!-- Clock Widget End -->
+    <div id="map"></div>
+    <button id="actionButton"></button>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const pageTitle = document.getElementById('pageTitle');
+            const actionButton = document.getElementById('actionButton');
+            const mapElement = document.getElementById('map');
+
+            const page = window.location.pathname.split('/').pop().replace('.html', '');
+            const action = page === 'advicetimein' ? 'Time In' : 'Time Out';
+
+            pageTitle.innerText = action;
+            actionButton.innerText = action;
+
+            let userId = '';
+            let username = '';
+
+            // Initialize LIFF
+            async function initializeLiff() {
+                await liff.init({ liffId: "2005997140-2qyn9OJZ" }); // Replace YOUR_LIFF_ID with your LIFF ID
+                if (liff.isLoggedIn()) {
+                    getUserProfile();
+                } else {
+                    liff.login();
+                }
+            }
+
+            // Get user profile from LINE
+            async function getUserProfile() {
+                const profile = await liff.getProfile();
+                userId = profile.userId;
+                username = profile.displayName;
+                console.log("User ID: " + userId);
+                console.log("Username: " + username);
+            }
+
+            initializeLiff();
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Geolocation is not supported by this browser!'
+                });
+            }
+
+            function showPosition(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+
+                mapElement.innerHTML = `<iframe src="${mapUrl}" width="100%" height="100%" style="border:0;"></iframe>`;
+
+                actionButton.addEventListener('click', function () {
+                    saveData(lat, lon, action);
+                });
+            }
+
+            function showError(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        Swal.fire('Permission Denied', 'User denied the request for Geolocation.', 'error');
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        Swal.fire('Position Unavailable', 'Location information is unavailable.', 'error');
+                        break;
+                    case error.TIMEOUT:
+                        Swal.fire('Timeout', 'The request to get user location timed out.', 'error');
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        Swal.fire('Unknown Error', 'An unknown error occurred.', 'error');
+                        break;
+                }
+            }
+
+            function saveData(latitude, longitude, action) {
+                const data = {
+                    date: new Date().toLocaleDateString(),
+                    time: new Date().toLocaleTimeString(),
+                    userId: userId,  
+                    username: username,  
+                    latitude: latitude,
+                    longitude: longitude,
+                    action: action
+                };
+
+                fetch('https://script.google.com/macros/s/AKfycbwugLvTgbXJrUKdSebnDugdH0V8Omgw-_hwnMWUM_jBs-p4cDMNq1H7ypzT419O8i4/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    Swal.fire('Success', 'Data saved successfully', 'success');
+                })
+                .catch(error => {
+                    Swal.fire('Error', 'Error saving data: ' + error, 'error');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
