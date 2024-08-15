@@ -38,18 +38,23 @@
     <script>
         function initializeLiff() {
             liff.init({
-                liffId: "2005997140-0qja2Nyx"
+                liffId: "2005997140-0qja2Nyx"  // แทนที่ YOUR_LIFF_ID ด้วย LIFF ID ของคุณ
             }).then(() => {
+                console.log("LIFF initialized");
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(profile => {
+                        console.log("Profile retrieved:", profile);
                         document.getElementById("userId").value = profile.userId;
                         document.getElementById("username").value = profile.displayName;
                         document.getElementById("profileImageUrl").value = profile.pictureUrl;
-                    }).catch(err => console.error(err));
+
+                        // แสดงฟอร์มเมื่อข้อมูลถูกโหลดจาก LINE LIFF เสร็จแล้ว
+                        document.getElementById('registerForm').style.display = 'block';
+                    }).catch(err => console.error("Error getting profile:", err));
                 } else {
                     liff.login();
                 }
-            }).catch(err => console.error(err));
+            }).catch(err => console.error("LIFF initialization failed:", err));
         }
 
         function submitForm(event) {
@@ -59,7 +64,7 @@
             const form = document.getElementById('registerForm');
             const formData = new FormData(form);
 
-            fetch('https://script.google.com/macros/s/AKfycbyjB-0Hfvda9xgJefy2Q-8csvAgScu1_fQwQBJQ4ItD-oAHy7VTLCLGTAWexhmcjJQ/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbyjB-0Hfvda9xgJefy2Q-8csvAgScu1_fQwQBJQ4ItD-oAHy7VTLCLGTAWexhmcjJQ/exec', {  // แทนที่ YOUR_WEB_APP_URL ด้วย URL ของ Google Apps Script Web App
                 method: 'POST',
                 body: formData
             })

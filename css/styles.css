@@ -54,6 +54,7 @@ button:hover {
     background-color: #45a049;
 }
 
+/* ฟอร์มจะถูกซ่อนจนกว่าจะมีการแสดงผลด้วย JavaScript */
 #registerForm {
     display: none;
 }
