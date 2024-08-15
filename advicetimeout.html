@@ -96,13 +96,10 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-       document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
             const pageTitle = document.getElementById('pageTitle');
             const actionButton = document.getElementById('actionButton');
             const mapElement = document.getElementById('map');
-
-            const successSound = new Audio('mp3/บันทึกเวลา.mp3');
-            const errorSound = new Audio('mp3/บันทึกเวลาไม่สำเร็จ.mp3');
 
             const page = window.location.pathname.split('/').pop().replace('.html', '');
             const action = page === 'advicetimein' ? 'Time In' : 'Time Out';
@@ -113,8 +110,9 @@
             let userId = '';
             let username = '';
 
+            // Initialize LIFF
             async function initializeLiff() {
-                await liff.init({ liffId: "2005997140-5aENxMVP" });
+                await liff.init({ liffId: "2005997140-5aENxMVP" }); // Replace YOUR_LIFF_ID with your LIFF ID
                 if (liff.isLoggedIn()) {
                     getUserProfile();
                 } else {
@@ -122,10 +120,13 @@
                 }
             }
 
+            // Get user profile from LINE
             async function getUserProfile() {
                 const profile = await liff.getProfile();
                 userId = profile.userId;
                 username = profile.displayName;
+                // console.log("User ID: " + userId);
+                // console.log("Username: " + username);
             }
 
             initializeLiff();
@@ -133,7 +134,6 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
-                errorSound.play(); // เล่นเสียงข้อผิดพลาด
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -154,7 +154,6 @@
             }
 
             function showError(error) {
-                errorSound.play(); // เล่นเสียงข้อผิดพลาดตามเหตุการณ์ต่าง ๆ
                 switch (error.code) {
                     case error.PERMISSION_DENIED:
                         Swal.fire('Permission Denied', 'User denied the request for Geolocation.', 'error');
@@ -191,16 +190,13 @@
                     body: JSON.stringify(data)
                 })
                 .then(response => {
-                    successSound.play(); // เล่นเสียงสำเร็จ
                     Swal.fire('Success', 'Data saved successfully', 'success');
                 })
                 .catch(error => {
-                    errorSound.play(); // เล่นเสียงข้อผิดพลาด
                     Swal.fire('Error', 'Error saving data: ' + error, 'error');
                 });
             }
         });
-
     </script>
 </body>
 </html>
