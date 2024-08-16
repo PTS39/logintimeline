@@ -110,7 +110,7 @@
                         document.getElementById("userId").value = profile.userId;
                         document.getElementById("username").value = profile.displayName;
                         document.getElementById("profileImageUrl").value = profile.pictureUrl;
-
+    
                         // แสดงฟอร์มเมื่อข้อมูลถูกโหลดจาก LINE LIFF เสร็จแล้ว
                         document.getElementById('registerForm').style.display = 'block';
                     }).catch(err => console.error("Error getting profile:", err));
@@ -119,14 +119,14 @@
                 }
             }).catch(err => console.error("LIFF initialization failed:", err));
         }
-
+    
         function submitForm(event) {
             event.preventDefault();
-
+    
             // ส่งข้อมูลฟอร์มไปยัง Google Apps Script Web App
             const form = document.getElementById('registerForm');
             const formData = new FormData(form);
-
+    
             fetch('https://script.google.com/macros/s/AKfycbyM1oW5aPrd1D3p5gtgvm5C0USObC7ix5eW9PHceelcn3PgYBXIuO4Oc4vME8oCJOD2/exec', {  // แทนที่ YOUR_WEB_APP_URL ด้วย URL ของ Google Apps Script Web App
                 method: 'POST',
                 body: formData
@@ -135,7 +135,9 @@
             .then(result => {
                 switch (result) {
                     case 'Success':
-                        Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success');
+                        Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success').then(() => {
+                            liff.closeWindow();  // ปิดหน้าเว็บเมื่อบันทึกข้อมูลสำเร็จ
+                        });
                         break;
                     default:
                         Swal.fire('ล้มเหลว', 'การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.', 'error');
@@ -146,10 +148,9 @@
                 Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
             });
         }
-
-
-
+    
         window.onload = initializeLiff;
     </script>
+    
 </body>
 </html>
