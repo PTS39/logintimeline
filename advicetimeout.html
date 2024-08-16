@@ -191,7 +191,7 @@
                 })
                 .then(response => {
                     Swal.fire('Success', 'Data saved successfully', 'success').then(() => {
-                        window.close();
+                        liff.closeWindow();  // ปิดหน้าเว็บเมื่อบันทึกข้อมูลสำเร็จ
                     });
                 })
                 .catch(error => {
