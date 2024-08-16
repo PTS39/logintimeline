@@ -64,40 +64,26 @@
             // ส่งข้อมูลฟอร์มไปยัง Google Apps Script Web App
             const form = document.getElementById('registerForm');
             const formData = new FormData(form);
-            
-            // แปลง FormData เป็น JSON object
-            const data = Object.fromEntries(formData.entries());
 
-            fetch('https://script.google.com/macros/s/AKfycbxRNtTKJVbq3w17MQ8AW7yCvKWMA3fBboNCXv4cbH9wfTbATcIpLup0X4ZNlXZ3812t/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbz6Vy-Nwv8634bP9ByNjUpuJ_2op4KxKTDFzIiOZZVMJusn-vCunNLtiUyFZs6N8HrJ/exec', {  // แทนที่ YOUR_WEB_APP_URL ด้วย URL ของ Google Apps Script Web App
                 method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+                body: formData
             })
-            .then(response => {
-                // ในโหมด no-cors คุณจะไม่สามารถเข้าถึงข้อมูลใน response ได้
-                console.log('Request was made with no-cors mode');
-                Swal.fire({
-                    title: 'สำเร็จ!',
-                    text: 'การสมัครสมาชิกเสร็จสิ้น',
-                    icon: 'success',
-                    confirmButtonText: 'ตกลง'
-                });
+            .then(response => response.text())
+            .then(result => {
+                switch (result) {
+                    case 'Success':
+                        alert('การบันทึกข้อมูลสำเร็จ!');
+                        break;
+                    default:
+                        alert('การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.');
+                        break;
+                }
             })
             .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    title: 'ผิดพลาด!',
-                    text: 'การสมัครสมาชิกไม่สำเร็จ',
-                    icon: 'error',
-                    confirmButtonText: 'ตกลง'
-                });
+                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message);
             });
         }
-
-
 
         window.onload = initializeLiff;
     </script>
