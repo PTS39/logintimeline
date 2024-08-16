@@ -191,6 +191,7 @@
                 })
                 .then(response => {
                     Swal.fire('Success', 'Data saved successfully', 'success');
+                    liff.closeWindow();  // ปิดหน้าเว็บเมื่อบันทึกข้อมูลสำเร็จ
                 })
                 .catch(error => {
                     Swal.fire('Error', 'Error saving data: ' + error, 'error');
