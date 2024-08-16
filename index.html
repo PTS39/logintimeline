@@ -135,15 +135,15 @@
             .then(result => {
                 switch (result) {
                     case 'Success':
-                        alert('การบันทึกข้อมูลสำเร็จ!');
+                        Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success');
                         break;
                     default:
-                        alert('การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.');
+                        Swal.fire('ล้มเหลว', 'การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.', 'error');
                         break;
                 }
             })
             .catch(error => {
-                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message);
+                Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
             });
         }
 
