@@ -133,19 +133,40 @@
             })
             .then(response => response.text())
             .then(result => {
-                switch (result) {
-                    case 'Success':
-                        Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success');
-                        break;
-                    default:
-                        Swal.fire('ล้มเหลว', 'การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.', 'error');
-                        break;
+                if (result === 'Success') {
+                    Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success');
+                    
+                    // รีเช็คค่าของฟอร์มที่กรอกไว้
+                    const checkFormValues = {
+                        nameSurname: form.elements['nameSurname'].value,
+                        studentId: form.elements['studentId'].value,
+                        email: form.elements['email'].value,
+                        phoneNumber: form.elements['phoneNumber'].value
+                    };
+
+                    console.log('ข้อมูลที่บันทึกแล้ว:', checkFormValues);
+
+                    // แสดงค่าที่บันทึกใน Swal
+                    Swal.fire({
+                        title: 'ข้อมูลที่บันทึกแล้ว',
+                        html: `
+                            <p><strong>ชื่อ-นามสกุล:</strong> ${checkFormValues.nameSurname}</p>
+                            <p><strong>รหัสนักศึกษา:</strong> ${checkFormValues.studentId}</p>
+                            <p><strong>อีเมล:</strong> ${checkFormValues.email}</p>
+                            <p><strong>เบอร์โทรศัพท์:</strong> ${checkFormValues.phoneNumber}</p>
+                        `,
+                        icon: 'info'
+                    });
+
+                } else {
+                    Swal.fire('ล้มเหลว', 'การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.', 'error');
                 }
             })
             .catch(error => {
                 Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
             });
         }
+
 
         window.onload = initializeLiff;
     </script>
