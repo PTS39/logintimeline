@@ -135,13 +135,13 @@
             .then(result => {
                 if (result === 'Success') {
                     Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success');
-                    
+
                     // รีเช็คค่าของฟอร์มที่กรอกไว้
                     const checkFormValues = {
-                        nameSurname: form.elements['nameSurname'].value,
-                        studentId: form.elements['studentId'].value,
-                        email: form.elements['email'].value,
-                        phoneNumber: form.elements['phoneNumber'].value
+                        nameSurname: form.querySelector('input[name="nameSurname"]').value,
+                        studentId: form.querySelector('input[name="studentId"]').value,
+                        email: form.querySelector('input[name="email"]').value,
+                        phoneNumber: form.querySelector('input[name="phoneNumber"]').value
                     };
 
                     console.log('ข้อมูลที่บันทึกแล้ว:', checkFormValues);
@@ -166,6 +166,7 @@
                 Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
             });
         }
+
 
 
         window.onload = initializeLiff;
