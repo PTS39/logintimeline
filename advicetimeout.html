@@ -190,7 +190,9 @@
                     body: JSON.stringify(data)
                 })
                 .then(response => {
-                    Swal.fire('Success', 'Data saved successfully', 'success');
+                    Swal.fire('Success', 'Data saved successfully', 'success').then(() => {
+                        window.close();
+                    });
                 })
                 .catch(error => {
                     Swal.fire('Error', 'Error saving data: ' + error, 'error');
