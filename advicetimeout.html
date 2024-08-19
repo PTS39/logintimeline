@@ -44,53 +44,88 @@
             background-color: #0056b3;
         }
 
+        /* ฟอร์มจะถูกซ่อนจนกว่าจะมีการแสดงผลด้วย JavaScript */
+        #registerForm {
+            display: none;
+        }
+
+        /* Loading animation style */
+        #loading {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;  
+            height: 200px; 
+            text-align: center;
+        }
+
+        .loading-image {
+            width: 100%;
+            height: auto;
+            animation: fly-right 1.5s linear infinite;
+        }
+
+        @keyframes fly-right {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-    <h1 id="pageTitle"></h1>
-    <!-- Clock Widget -->
-    <script type="text/javascript">
-        var css_file = document.createElement("link");
-        css_file.setAttribute("rel", "stylesheet");
-        css_file.setAttribute("type", "text/css");
-        css_file.setAttribute("href", "https://s.bookcdn.com//css/cl/bw-cl-c22.css?v=0.0.1");
-        document.getElementsByTagName("head")[0].appendChild(css_file);
-    </script>
-    <div id="tw_22_1699046851">
-        <div style="width:200px; height:px; margin: 0 auto;">
-            <a href="https://hotelmix.co.th/time/kumphawapi-345330">Kumphawapi</a><br/>
-        </div>
-    </div>
-    <script type="text/javascript">
-        function setWidgetData_1699046851(data){
-            if (typeof(data) != 'undefined' && data.results.length > 0) {
-                for (var i = 0; i < data.results.length; ++i) {
-                    var objMainBlock = '';
-                    var params = data.results[i];
-                    objMainBlock = document.getElementById('tw_' + params.widget_type + '_' + params.widget_id);
-                    if (objMainBlock !== null) objMainBlock.innerHTML = params.html_code;
-                }
-            }
-        }
-        var clock_timer_1699046851 = -1;
-        widgetSrc = "https://widgets.booked.net/time/info?ver=2;domid=1171;type=22;id=1699046851;scode=70241;city_id=;wlangid=30;mode=1;details=0;background=ffffff;border_color=ffffff;color=686868;add_background=ffffff;add_color=333333;head_color=ffffff;border=0;transparent=0";
-        var widgetUrl = location.href;
-        widgetSrc += '&ref=' + widgetUrl;
-        var wstrackId = "";
-        if (wstrackId) {
-            widgetSrc += ';wstrackId=' + wstrackId + ';'
-        }
-        var timeBookedScript = document.createElement("script");
-        timeBookedScript.setAttribute("type", "text/javascript");
-        timeBookedScript.src = widgetSrc;
-        document.body.appendChild(timeBookedScript);
-    </script>
-    <!-- Clock Widget End -->
-    <div id="map"></div>
-    <button id="actionButton"></button>
+    <div id="loading">
+        <img src="advice.png" alt="Loading" class="loading-image">
     </div>
 
+    <div class="container">
+        <h1 id="pageTitle"></h1>
+        <!-- Clock Widget -->
+        <script type="text/javascript">
+            var css_file = document.createElement("link");
+            css_file.setAttribute("rel", "stylesheet");
+            css_file.setAttribute("type", "text/css");
+            css_file.setAttribute("href", "https://s.bookcdn.com//css/cl/bw-cl-c22.css?v=0.0.1");
+            document.getElementsByTagName("head")[0].appendChild(css_file);
+        </script>
+        <div id="tw_22_1699046851">
+            <div style="width:200px; height:px; margin: 0 auto;">
+                <a href="https://hotelmix.co.th/time/kumphawapi-345330">Kumphawapi</a><br/>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function setWidgetData_1699046851(data){
+                if (typeof(data) != 'undefined' && data.results.length > 0) {
+                    for (var i = 0; i < data.results.length; ++i) {
+                        var objMainBlock = '';
+                        var params = data.results[i];
+                        objMainBlock = document.getElementById('tw_' + params.widget_type + '_' + params.widget_id);
+                        if (objMainBlock !== null) objMainBlock.innerHTML = params.html_code;
+                    }
+                }
+            }
+            var clock_timer_1699046851 = -1;
+            widgetSrc = "https://widgets.booked.net/time/info?ver=2;domid=1171;type=22;id=1699046851;scode=70241;city_id=;wlangid=30;mode=1;details=0;background=ffffff;border_color=ffffff;color=686868;add_background=ffffff;add_color=333333;head_color=ffffff;border=0;transparent=0";
+            var widgetUrl = location.href;
+            widgetSrc += '&ref=' + widgetUrl;
+            var wstrackId = "";
+            if (wstrackId) {
+                widgetSrc += ';wstrackId=' + wstrackId + ';'
+            }
+            var timeBookedScript = document.createElement("script");
+            timeBookedScript.setAttribute("type", "text/javascript");
+            timeBookedScript.src = widgetSrc;
+            document.body.appendChild(timeBookedScript);
+        </script>
+        <!-- Clock Widget End -->
+        <div id="map"></div>
+        <button id="actionButton"></button>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
@@ -100,6 +135,7 @@
             const pageTitle = document.getElementById('pageTitle');
             const actionButton = document.getElementById('actionButton');
             const mapElement = document.getElementById('map');
+            const loading = document.getElementById('loading');
 
             const page = window.location.pathname.split('/').pop().replace('.html', '');
             const action = page === 'advicetimein' ? 'Time In' : 'Time Out';
@@ -112,7 +148,7 @@
 
             // Initialize LIFF
             async function initializeLiff() {
-                await liff.init({ liffId: "2005997140-5aENxMVP" }); // Replace YOUR_LIFF_ID with your LIFF ID
+                await liff.init({ liffId: "2005997140-2qyn9OJZ" }); // Replace YOUR_LIFF_ID with your LIFF ID
                 if (liff.isLoggedIn()) {
                     getUserProfile();
                 } else {
@@ -170,7 +206,17 @@
                 }
             }
 
+            function showLoading() {
+                loading.style.display = 'block';
+            }
+
+            function hideLoading() {
+                loading.style.display = 'none';
+            }
+
             function saveData(latitude, longitude, action) {
+                showLoading();
+
                 const data = {
                     date: new Date().toLocaleDateString(),
                     time: new Date().toLocaleTimeString(),
@@ -190,11 +236,13 @@
                     body: JSON.stringify(data)
                 })
                 .then(response => {
+                    hideLoading();
                     Swal.fire('Success', 'Data saved successfully', 'success').then(() => {
                         liff.closeWindow();  // ปิดหน้าเว็บเมื่อบันทึกข้อมูลสำเร็จ
                     });
                 })
                 .catch(error => {
+                    hideLoading();
                     Swal.fire('Error', 'Error saving data: ' + error, 'error');
                 });
             }
