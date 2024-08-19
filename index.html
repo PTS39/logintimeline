@@ -70,7 +70,7 @@
         }
 
         /* Loading animation style */
-        #loading {
+        /* #loading {
             display: none;
             position: fixed;
             z-index: 9999;
@@ -79,6 +79,28 @@
             transform: translate(-50%, -50%);
             font-size: 24px;
             color: #4CAF50;
+        } */
+
+        #loading {
+            display: none;
+            position: relative;
+            overflow: hidden;
+            width: 400px;  /* Adjust width based on image size */
+            height: 200px; /* Adjust height based on image size */
+        }
+
+        .loading-image {
+            position: absolute;
+            animation: fly-right 1.5s linear infinite;
+        }
+
+        @keyframes fly-right {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
         }
     </style>
 </head>
@@ -111,7 +133,10 @@
     </div>
 
     <!-- Loading animation -->
-    <div id="loading">กำลังบันทึกข้อมูล...</div>
+    <!-- <div id="loading">กำลังบันทึกข้อมูล...</div> -->
+    <div id="loading">
+        <img src="advice.png" alt="Loading" class="loading-image">
+    </div>
 
     <script>
         function initializeLiff() {
