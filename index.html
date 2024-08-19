@@ -70,27 +70,21 @@
         }
 
         /* Loading animation style */
-        /* #loading {
+        #loading {
             display: none;
             position: fixed;
             z-index: 9999;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 24px;
-            color: #4CAF50;
-        } */
-
-        #loading {
-            display: none;
-            position: relative;
-            overflow: hidden;
-            width: 400px;  /* Adjust width based on image size */
-            height: 200px; /* Adjust height based on image size */
+            width: 200px;  
+            height: 200px; 
+            text-align: center;
         }
 
         .loading-image {
-            position: absolute;
+            width: 100%;
+            height: auto;
             animation: fly-right 1.5s linear infinite;
         }
 
@@ -133,7 +127,6 @@
     </div>
 
     <!-- Loading animation -->
-    <!-- <div id="loading">กำลังบันทึกข้อมูล...</div> -->
     <div id="loading">
         <img src="advice.png" alt="Loading" class="loading-image">
     </div>
