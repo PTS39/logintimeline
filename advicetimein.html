@@ -187,16 +187,16 @@
                 const speed = position.coords.speed;
 
                 // ตรวจสอบความแม่นยำของตำแหน่ง
-                if (accuracy > 50) {
-                    Swal.fire('Location Error', 'ตำแหน่งของคุณไม่มีความแม่นยำพอ โปรดลองอีกครั้ง', 'error');
-                    return;
-                }
+                // if (accuracy > 50) {
+                //     Swal.fire('Location Error', 'ตำแหน่งของคุณไม่มีความแม่นยำพอ โปรดลองอีกครั้ง', 'error');
+                //     return;
+                // }
 
                 // ตรวจสอบความเร็วในการเคลื่อนที่
-                if (speed > 50) { // ประมาณ 180 km/h
-                    Swal.fire('Speed Error', 'ความเร็วของคุณไม่น่าเป็นไปได้ โปรดลองอีกครั้ง', 'error');
-                    return;
-                }
+                // if (speed > 50) { // ประมาณ 180 km/h
+                //     Swal.fire('Speed Error', 'ความเร็วของคุณไม่น่าเป็นไปได้ โปรดลองอีกครั้ง', 'error');
+                //     return;
+                // }
 
                 const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
 
